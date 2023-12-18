@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="nl">
+  
+<!-- Mirrored from df.webontwerp.ucll.be/EN/SQL_where/ by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 18 Dec 2023 15:09:13 GMT -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../assets/styles/stijl.css">
+    <link rel="stylesheet" href="../../../cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/vs2015.min.css">
+    <script src="../../../cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+    <title>SQL: WHERE</title>
+  </head>
+
+  <body>
+    <header id="top">
+      <div class="container">
+        <nav>
+          <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../leerpad/index.html"></a></li>
+            <li><a href="../model_menu/index.html">Data modelling</a></li>
+            <li><a href="../SQL_menu/index.html">SQL</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    
+  <main>
+    <blockquote>
+      <p>
+        <span class="citaat">Code is there to explain the comments to the computer.</span>
+        <br>
+        &mdash;Andy Harris
+      </p>
+    </blockquote>
+    <h1>De WHERE clause in detail</h1>
+    <p></p>
+    <section class="leerdoel">
+      <ul></ul>
+    </section>
+
+    <p>
+      In een <code>SELECT</code> statement zoals: <pre><code>SELECT opocode, coordinator
+FROM opleidingsonderdeel
+WHERE coordinator = &#39;u0012047&#39;</code></pre> wordt eerst de <code>FROM</code> clause uitgevoerd door de databankserver.
+      Heel de tabel ‘opleidingsonderdeel’ wordt in het werkgeheugen ingeladen. Ik
+      weet het: we vallen in herhaling, maar dit is echt essentieel om query’s te
+      kunnen schrijven.
+
+
+      In a <code>SELECT</code> statement such as: <pre><code>SELECT opocode, coordinator
+FROM opleidingsonderdeel coordinator = &#39;u0012047&#39;</code></pre> the <code>FROM</code> clause is first executed by the database server.
+      The whole table 'opleidingsonderdeel' is loaded into cache. I
+      know: we are repeating ourselves, but this is really essential to be able to
+      be able to write queries.
+
+
+    </p><p>
+      Then the <code>WHERE</code> clause is viewed (if any). Only
+      the rows <em>that satisfy the condition</em> in the <code>WHERE</code> are selected.
+      All other rows disappear from memory. The <code>WHERE</code> clause comes only after the
+      <code>SELECT</code>. In this piece, we will look more specifically at some
+      possibilities of the <code>WHERE</code>.
+
+    </p>
+    <section class="info">
+      <p>
+        You can test the code examples in the table 'opleidingsonderdeel' of
+        the schema 'uclloket' (or in your own version of this table in your
+        personal schema).
+      </p>
+    </section>
+
+    <h2>Standard comparison operators</h2>
+    <p>
+
+      SQL provides the standard comparison operators: <code>=</code> (equal to),
+      <code>&lt;&gt;</code> or <code>!=</code> (not equal to), <code>&gt;</code> (greater than), <code>&lt;</code> (less than), <code>&gt;=</code> (greater
+      than or equal to) and <code>&lt;=</code> (less than or equal to). You can
+      compare numbers, strings and date or time. The following query shows all OPOs
+      that have a start date before April 5, 2017:
+    </p>
+    <pre><code>SELECT *
+FROM opleidingsonderdeel
+WHERE van &lt; &#39;2017-04-05&#39; -- datum in ISO-formaat met enkele aanhalingstekens invoeren</code></pre>
+    <p>
+      A date that is <em>more in the past</em> is <em>smaller</em> than a
+      later date, as you might logically expect.
+    </p>
+    <p>
+      Comparing strings involves a bit more. Unfortunately
+      the result <em>database specific</em>. That 'a' &lt; 'b' is obvious,
+      but what about the comparison of 'a' and 'A'? Tell you what, we'll
+      just try it out in PostgreSQL:
+      <pre><code>SELECT &#39;a&#39; &lt; &#39;A&#39;</code></pre>
+    </p>
+    <p>
+      
+      The result is <code>true</code>. We conclude: <em>in PostgreSQL</em> 
+      lowercase letters come before uppercase letters. In another DBMS, it may be just
+      reversed.
+
+    </p>
+    <p>
+      And what about a comparison between 'aap' and 'appel' and between 'appel' and
+      'appelmoes'? Just testing:<pre><code>SELECT &#39;aap&#39; &gt; &#39;appel&#39;;
+SELECT &#39;appel&#39; &gt; &#39;appelmoes&#39;</code></pre>
+    </p>
+    <p>
+      The result is twice <code>false</code>. The comparison between two
+      strings is in fact done <em>letter by letter from left to right</em>.
+      For 'aap' and 'appel', the first letter is the same, but not the second.
+      The second 'a' of 'aap' is smaller than the 'p' of 'appel'
+      and so <code>'aap' &lt; 'appel'</code>.
+    </p>
+    <p>
+
+      The word "appel" is smaller than "appelmoes". The letters are looked at one by
+      one at a time. After five matching letters, there is no sixth letter
+      in the string 'appel' and so this word is smaller (<em>shorter</em>) than the
+      longer word 'appelmoes'.
+
+
+    </p>
+
+    <h2>IS (NOT) NULL</h2>
+    <p>
+      
+      The value <code>NULL</code> in a field means "unknown. You can of course
+      also test for this special value. You just have to remember not to use
+      <code>=</code> but use <code>IS</code>. The next query shows a
+      list of all OPOs that do not yet know when they will stop:
+      <pre><code>SELECT *
+FROM opleidingsonderdeel
+WHERE tot IS NULL -- dus niet = NULL</code></pre>
+    </p>
+    <p>
+      Conversely, the following query returns the list of all OPO's that do have an
+      end date (and thus no longer taught or for which it is already
+      known until when these OPO's will be in the curriculum): <pre><code>SELECT *
+FROM opleidingsonderdeel
+WHERE tot IS NOT NULL</code></pre>
+    </p>
+
+    <h2>String patterns with LIKE</h2>
+    <p>
+      Sometimes you don't want to search on the full value of a string, but
+      only on part of it. Suppose you want a list of all OPO's that have the
+      word 'web' somewhere in the name (whether with large or small letters).
+      We already know <a href="../../NL/SQL_select/index-2.html#Stringfuncties">from a previous run</a> That we have the function <code>lower()</code> will certainly be useful in this
+      query to convert all uppercase letters to lowercase. But how do
+      we test for "web" anywhere in the name?
+    </p>
+    <p>
+      This can be done in different ways (including with<a href="https://www.postgresql.org/docs/current/functions-matching.html">regular expressions</a>). Here we look at <em>the simplest way</em> using <code>LIKE</code>and a pattern. In that pattern you can use two special
+    characters:
+      </p><ul>
+        <li><code>%</code>: 0 or more characters;</li>
+        <li><code>_</code> (underscore): right 1 character.</li>
+      </ul>
+    
+    <p>
+      The following query searches all names that contain the substring somewhere in the name
+      'web' (upper/lower case does not matter):<pre><code>SELECT opocode, naam, semester
+FROM opleidingsonderdeel
+WHERE lower(naam) LIKE &#39;%web%&#39;</code></pre>
+    </p>
+    <p>Now make the following exercises.</p>
+    <section class="taak">
+  <p>
+        Describe in words what subsequent LIKE strings are looking for:
+        <pre><code>... LIKE &#39;B%&#39;
+... LIKE &#39;_e%&#39;
+... LIKE &#39;%e%e%e%&#39;
+... LIKE &#39;__a_b%&#39;</code></pre>
+      </p>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <pre><code>... LIKE &#39;B%&#39; --alle strings die beginnen met hoofdletter B
+... LIKE &#39;_e%&#39; --alle strings die als tweede letter een e hebben
+... LIKE &#39;%e%e%e%&#39; --alle strings die minstens drie keer een e hebben
+... LIKE &#39;__a_b%&#39; --alle strings met een a als derde en een b als vijfde letter</code></pre>
+      </div>
+      
+</section>
+
+    <section class="taak">
+  <p>
+        Provide the SQL query that generates a list of all professors
+        whose lecturer code ends in the digit 4 with the name of the OPO
+        for which they are responsible.
+      </p>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <pre><code>SELECT coordinator, naam
+FROM opleidingsonderdeel
+WHERE coordinator like &#39;%4&#39;
+-- je had eventueel ook substring() kunnen gebruiken. Probeer je eens op die manier?</code></pre>
+      </div>
+      
+</section>
+
+    <h2>Retain rows that do NOT satisfy a condition</h2>
+    <p>
+      With a condition (condition) in the <code>WHERE</code> clause, we only keep
+      those rows that meet that condition. What if you want all the other
+      rows, that is, those that <em>don't</em> satisfy the condition? For this
+      there exists the keyword <code>NOT</code>. The next query returns all OPOs that
+      do not meet the condition, i.e. those that do not start with the letters
+      'Web':<pre><code>SELECT opocode, naam, semester
+FROM opleidingsonderdeel
+WHERE NOT naam LIKE &#39;Web%&#39;</code></pre>
+    </p>
+    <section class="taak">
+  <p>
+        List all OPO's (opo code, name and number of credits)
+        whose name does not contain a single 'a' (lowercase only, uppercase 'A'
+        may occur). Write the query. What do you modify in your
+        solution if the uppercase 'A' is also not allowed to occur?
+      </p>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <pre><code>SELECT opocode, naam, studiepunten
+FROM opleidingsonderdeel
+WHERE NOT naam like &#39;%a%&#39; -- aanpassing: NOT lower(naam) like &#39;%a%&#39;</code></pre>
+      </div>
+      
+</section>
+
+    <h2>Linking conditions with AND and OR</h2>
+    <p>
+      We can link multiple conditions with <code>AND</code> and <code>OR</code>, by the way, can also be used in combination with <code>NOT</code>:
+    </p>
+    <ul>
+      <li>
+        <code>A AND B</code>: only <code>TRUE</code> if both A and B <code>TRUE</code> are;
+      </li>
+      <li>
+        <code>A OR B</code>: <code>TRUE</code> If either A or B or both are
+        <code>TRUE</code>.
+      </li>
+    </ul>
+    <section class="taak">
+  <p>
+        What does the following query do:<pre><code>SELECT *
+FROM opleidingsonderdeel
+WHERE taal = &#39;nl&#39; AND lower(naam) LIKE &#39;%prog%&#39;</code></pre>
+      </p>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        This query displays all columns of those OPO's that are given in Dutch
+        <em>and</em> whose name were converted to lowercase and
+        contains the string 'prog'. Both conditions must be satisfied at the same time!  
+      </div>
+      
+</section>
+    <section class="taak">
+  <p>
+        Write the query that generates the list of all OPO's given in either
+        Dutch or French given.
+      </p>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <pre><code>SELECT *
+FROM opleidingsonderdeel
+WHERE taal = &#39;nl&#39; OR taal = &#39;fr&#39; -- we zien later een kortere manier om dit te noteren</code></pre>
+      </div>
+      
+</section>
+    <p>
+      You can <em>link</em> more than two conditions. You have to be
+      be careful as the following example demonstrates. List all the OPOs
+      taught in Dutch or French that will only be in the
+      new curriculum. We try the following query:<pre><code>SELECT *
+FROM opleidingsonderdeel
+WHERE taal = &#39;nl&#39; OR taal = &#39;fr&#39; AND tot IS NULL</code></pre>
+    </p>
+    <section class="taak">
+  <p>
+        This query returns the wrong result. Run the query and explain
+        why this result is incorrect.
+      </p>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <p>
+          The reason has to do with the order of operations. Just as
+          you learned long ago that 3 + 4 - 2 should be read as 3 + (4 -
+          2) because multiplication takes precedence over addition, just as
+          there is a sequence of operators in a <code>WHERE</code>.
+        </p>
+      </div>
+      
+</section>
+    <p>The order of the operators is, from high priority to low:</p>
+    <ol>
+      <li>
+        first, comparison operators such as <code>=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, ...,
+      </li>
+      <li>then <code>NOT</code>,</li>
+      <li>then <code>AND</code> en</li>
+      <li>last but not least<code>OR</code>.</li>
+    </ol>
+    <p>
+      Dat betekent dat bovenstaande conditie niet gewoon van links naar rechts
+      uitgevoerd wordt, maar als <code>taal = 'nl' OR (taal = 'fr' AND tot IS NULL)</code>. Deze voorwaarde kan je vertalen als “alle Nederlandstalige OPO’s (van
+      heden of verleden, maakt niet uit) ofwel alle Franstalige die in het
+      huidige curriculum zitten”. Dat is niet wat we wilden.
+    </p><p>
+      De oplossing is: gebruik haakjes. De query zoals we hem bedoelden wordt
+      dus:
+      
+      
+      
+      This means that the above condition is not simply left-to-right
+      but as <code>taal = 'nl' OR (taal = 'fr' AND tot IS NULL)</code>. You can translate this condition as "all Dutch-language OPO's (from
+      present or past, doesn't matter) or all French-speaking ones that are in the
+      current curriculum". That's not what we wanted.
+    </p><p>
+      The solution is: use parentheses. The query as we intended it becomes
+      thus:<pre><code>SELECT *ıFROM opleidingsonderdeel
+WHERE (taal = &#39;nl&#39; OR taal = &#39;fr&#39;) AND tot IS NULL</code></pre>
+    </p>
+    <p>
+      For complex compound conditions, parentheses are always a good idea
+      because they increase the readability of your condition.
+    </p>
+
+    <h2>BETWEEN</h2>
+    <p>We begin with a simple exercise:</p>
+
+    <section class="taak">
+  <p>
+        Give all OPO's (code, name and SP) with 3 to 8 SP.      </p>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <pre><code>SELECT opocode, naam, studiepunten
+FROM opleidingsonderdeel
+WHERE studiepunten &gt;=3 AND studiepunten &lt;=8</code></pre>
+      </div>
+      
+</section>
+    <p>
+      SQL provides a somewhat shorter notation for this type of query that better
+      consistent with common language:<pre><code>SELECT opocode, naam, studiepunten
+FROM opleidingsonderdeel
+WHERE studiepunten BETWEEN 3 AND 8 -- beide grenzen zijn inbegrepen</code></pre>
+    </p>
+    <p>
+      If you have to write your own queries on an exam, you may always choose whether
+      you go for the <code>BETWEEN</code> notation or the slightly longer version. Your
+      must understand both notations, of course.
+    </p>
+
+    <h2>IN</h2>
+    <p>
+      The keyword IN allows you to write down a condition <em>shorter</em>. Again
+      again, a little exercise to get started:
+    </p>
+    <section class="taak">
+  <p>
+        Set up the query that shows all OPOs whose coordinator is one of
+        following individuals: u0012047, u0015584, u0024689 and u0031447.
+      </p>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <pre><code>SELECT opocode, naam, coordinator
+FROM opleidingsonderdeel
+WHERE coordinator = &#39;u0012047&#39; OR coordinator = &#39;u0015584&#39; OR
+  coordinator = &#39;u0024689&#39; OR coordinator = &#39;u0031447&#39;</code></pre>
+      </div>
+      
+</section>
+    <p>
+      It is a bit cumbersome, isn't it? It can be shortened with<code>IN</code>: <pre><code>SELECT opocode, naam, coordinator
+FROM opleidingsonderdeel
+WHERE coordinator IN (&#39;u0012047&#39;,&#39;u0015584&#39;,&#39;u0024689&#39;,&#39;u0031447&#39;)</code></pre>
+    </p>
+
+    <h2>Exercises SQLzoo</h2>
+    <p>
+      SQLzoo is an interactive practice platform. You enter SQL code that the
+      system reviews for you. It's a good idea to take these exercises
+      make. After all, you'll learn to work with tables other than the ones we use in the
+      course text throughout.
+    </p>
+    <h3>Table ‘world’</h3>
+    <p>This table contains the following data from countries:</p>
+    <ul>
+      <li>naam</li>
+      <li>continent</li>
+      <li>oppervlakte</li>
+      <li>aantal inwoners</li>
+      <li>bruto binnenlands product</li>
+    </ul>
+    <section class="taak">
+  <p>
+        As an introduction to this table, make<a href="https://sqlzoo.net/wiki/SELECT_basics">exercise series 1</a>, with three small exercises. You use here <code>WHERE</code>, <code>IN</code> and <code>BETWEEN</code> (and of course <code>SELECT</code> en <code>FROM</code>).
+      </p>
+  
+        <button>Show / hide solution</button>
+        
+      
+</section>
+    <section class="taak">
+  <p>
+        Create <a href="https://sqlzoo.net/wiki/SELECT_Quiz">quiz 1</a> with 7 question
+        focusing on <code>WHERE</code>.
+      </p>
+  
+        <button>Show / hide solution</button>
+        
+      
+</section>
+    <section class="taak">
+  <p>
+        <a href="https://sqlzoo.net/wiki/SELECT_from_WORLD_Tutorial">Practice set 2 </a> on the 'world' table contains 13 exercises in the style of the previous one, but
+        with additional computational functions such as <code>ROUND</code> and string manipulation.
+      </p>
+  
+        <button>Show / hide solution</button>
+        
+      
+</section>
+    <section class="taak">
+  <p>
+        <a href="https://sqlzoo.net/wiki/BBC_QUIZ">Quiz 2</a> again contains 7 questions.
+        Pay attention to the details!
+      </p>
+  
+        <button>Show / hide solution</button>
+        
+      
+</section>
+  </main>
+
+    <footer>
+      <div class="container">
+        <p>
+          <img src="../../assets/Logo_UCLL_negatief_RGB.png" width="100" height="53" alt="Logo UCLL Hogeschool"><br>&copy; 2023 — Steven Engels, Jan Van Hee
+        </p>
+        <p><a href="#top">&uarr; Go to top</a></p>
+      </div>
+    </footer>
+    <script src="../../assets/js/func2.js"></script>
+  </body>
+
+<!-- Mirrored from df.webontwerp.ucll.be/EN/SQL_where/ by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 18 Dec 2023 15:09:13 GMT -->
+</html>

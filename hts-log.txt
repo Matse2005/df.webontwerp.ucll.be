@@ -1,0 +1,44 @@
+HTTrack3.49-2+htsswf+htsjava launched on Mon, 18 Dec 2023 15:49:08 at http://df.webontwerp.ucll.be/ +*.png +*.gif +*.jpg +*.jpeg +*.css +*.js -ad.doubleclick.net/* -mime:application/foobar
+(winhttrack -qwC2%Ps2u1%s%uN0%I0p3DaK0H0%kf2A25000%f#f -F "Mozilla/4.5 (compatible; HTTrack 3.0x; Windows 98)" -%F "<!-- Mirrored from %s%s by HTTrack Website Copier/3.x [XR&CO'2014], %s -->" -%l "en, *" http://df.webontwerp.ucll.be/ -O1 "C:\Code\School\DF\Database" +*.png +*.gif +*.jpg +*.jpeg +*.css +*.js -ad.doubleclick.net/* -mime:application/foobar )
+
+Information, Warnings and Errors reported for this mirror:
+note:	the hts-log.txt file, and hts-cache folder, may contain sensitive information,
+	such as username/password authentication for websites mirrored in this project
+	do not share these files/folders if you want these information to remain private
+
+15:52:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/leerpad/ (from df.webontwerp.ucll.be/EN/)
+16:09:07	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/_astro/leerpad.c5d42cfe.css (from df.webontwerp.ucll.be/EN/leerpad/)
+16:09:15	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/model_logisch/ (from df.webontwerp.ucll.be/EN/leerpad/)
+16:09:15	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/model_logisch_oefeningen/ (from df.webontwerp.ucll.be/EN/leerpad/)
+16:09:15	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/model_fysiek/ (from df.webontwerp.ucll.be/EN/leerpad/)
+16:09:15	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/SQL_DBschema/ (from df.webontwerp.ucll.be/EN/leerpad/)
+16:09:15	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/SQL_privileges/ (from df.webontwerp.ucll.be/EN/leerpad/)
+16:09:15	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/SQL_subquery/ (from df.webontwerp.ucll.be/EN/leerpad/)
+16:09:15	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/SQL_kookclub/ (from df.webontwerp.ucll.be/EN/leerpad/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/assets/conceptual/Original_1976_Apple_1_Computer_In_A_Briefcase.JPG (from df.webontwerp.ucll.be/EN/model_conceptueel/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/EN/model_conceptual_exercises (from df.webontwerp.ucll.be/EN/model_conceptueel/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/NL/model_conceptual_exercises (from df.webontwerp.ucll.be/EN/model_conceptueel/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/NL/model_logical/ (from df.webontwerp.ucll.be/EN/SQL_CSV/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/EN/model_logical/ (from df.webontwerp.ucll.be/EN/SQL_eenopveel/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/assets/one-to-many-SQL/lector-opo-SQL.txt (from df.webontwerp.ucll.be/EN/SQL_eenopveel/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/NL/SQL_anopveel/ (from df.webontwerp.ucll.be/EN/SQL_innerjoin/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/assets/logic/model_logic_relational_database-model_afb02.png (from df.webontwerp.ucll.be/EN/model_logisch/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/assets/logical/model_logical_relational_conceptual_to_logical_afb01.png (from df.webontwerp.ucll.be/EN/model_logisch/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/assets/logical/model_logical_relational_conceptual_to_logical_afb02.png (from df.webontwerp.ucll.be/EN/model_logisch/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/assets/logic/model_logic_relational_conceptual_to_logic_afb03.png (from df.webontwerp.ucll.be/EN/model_logisch/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/assets/logical/model_logical_relational_conceptual_to_logical_afb04.png (from df.webontwerp.ucll.be/EN/model_logisch/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/assets/logical/model_logical_relational_conceptual_to_logical_afb05.png (from df.webontwerp.ucll.be/EN/model_logisch/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/assets/logical/model_logical_relational_conceptual_to_logical_afb06.png (from df.webontwerp.ucll.be/EN/model_logisch/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/assets/logical/model_logical_relational_conceptual_to_logical_afb07.png (from df.webontwerp.ucll.be/EN/model_logisch/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/assets/logical/model_logical_relational_conceptual_to_logical_afb08.png (from df.webontwerp.ucll.be/EN/model_logisch/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/NL/model_conceptual/index.html (from df.webontwerp.ucll.be/EN/model_logisch/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/assets/logical/model_logical_relational_conceptual_to_logical_afb09.png (from df.webontwerp.ucll.be/EN/model_logisch/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/NL/model_logical_exercises/ (from df.webontwerp.ucll.be/EN/model_logisch/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/assets/logical/model_logical_relational_conceptual_to_logical_afb10.png (from df.webontwerp.ucll.be/EN/model_logisch/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/assets/logical/model_logical_relational_conceptual_to_logical_afb11.png (from df.webontwerp.ucll.be/EN/model_logisch/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/NL/model_conceptual/ (from df.webontwerp.ucll.be/EN/model_logisch/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/assets/drawio/model_logical_redundancy_afb01.svg (from df.webontwerp.ucll.be/EN/model_logisch/)
+16:11:43	Error: 	"Not Found" (404) at link df.webontwerp.ucll.be/assets/drawio/model_logical_redundancy_afb02.svg (from df.webontwerp.ucll.be/EN/model_logisch/)
+
+HTTrack Website Copier/3.49-2 mirror complete in 22 minutes 35 seconds : 339 links scanned, 305 files written (57400220 bytes overall) [56270413 bytes received at 41527 bytes/sec], 1817644 bytes transferred using HTTP compression in 78 files, ratio 30%, 2.1 requests per connection
+(33 errors, 0 warnings, 0 messages)

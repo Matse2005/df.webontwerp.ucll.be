@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="nl">
+  
+<!-- Mirrored from df.webontwerp.ucll.be/EN/model_conceptueel_oefeningen/ by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 18 Dec 2023 15:09:12 GMT -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../assets/styles/stijl.css">
+    <link rel="stylesheet" href="../../../cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/vs2015.min.css">
+    <script src="../../../cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+    <title>Modelling: conceptual</title>
+  </head>
+
+  <body>
+    <header id="top">
+      <div class="container">
+        <nav>
+          <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../leerpad/index.html"></a></li>
+            <li><a href="../model_menu/index.html">Data modelling</a></li>
+            <li><a href="../SQL_menu/index.html">SQL</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    
+  <main>
+    <blockquote>
+      <p>
+        <span class="citaat">May the Force be with you.</span>
+        </p><p>&mdash;Star Wars</p>
+      
+    </blockquote>
+    <h1>Conceptual data model: exercises</h1>
+    <p>
+      The exercises below allow you to practice creating conceptual data models.
+      For the different exercises we give a model solution each time.
+    </p>
+
+    <h2>Exercise 1: youth club: entity types</h2>
+    <p>
+      Below you get the description of how a youth club could potentialle work.
+      This story will be used for the following exercises. You will successively
+      look for entity types, attributes and relationships. In this section, we
+      will first restrict ourselves to entity types.
+    </p>
+    <figure class="center">
+      <img src="../../assets/conceptueel/chiro.jpg" alt="">
+    </figure>
+    <section class="taak">
+  <div>
+        <p>
+          Read the description below thoroughly and try to identify the entity
+          types.
+        </p>
+        <p>
+          A youth club wants to set up a database, to support its membership
+          administration and activity planning. At initial registration, each
+          member is given a unique member number. Information such as name,
+          first name, address, email address, gender and date of birth are
+          recorded.
+        </p>
+        <p>
+          Our members must re-register every year, a registration is thus valid
+          for one year. Membership fees are also paid annually to cover
+          insurance costs, for example. This is a different amount every year,
+          the important thing is to know which members have paid their
+          registration fee, and which have not yet done so. At the moment an
+          enrolment happens, the member is placed in a certain age group, for
+          example '6 to 9 year olds', '10 to 12 year olds', ... The age class is
+          determined on the basis of the age of the member at the start of the
+          new year.
+        </p>
+        <p>
+          After registration, members are added to a group. With a lot of
+          registrations within a particular age group, it is possible that for a
+          given age group multiple groups are created. The groups themselves
+          choose a name that they will use throughout the year. Just like the
+          registration, this is revisited every year and the division remade.
+        </p>
+        <p>
+          Each group will have one designated member who will take on the role
+          of 'leader' of the group. In addition, each group may have additional
+          'co-leader', which will be one or more members who will support the
+          'main' leader. The age of the leaders should obviously not match the
+          age range of the group, that would be somewhat inappropriate.
+          Leadership is redefined every year, and therefore applies for the
+          lifetime of a group. Members can take charge of a maximum of one
+          group, this applies to both 'leaders' and 'co-leaders'.
+        </p>
+        <p>
+          Leaders organise certain activities for their groups which together
+          form the group's annual schedule. Each activity is scheduled on a
+          certain date and location. The same activity can be scheduled for
+          several groups at the same time.
+        </p>
+        <p>
+          We use a list of possible activities that are are described in a long
+          list. This list contains for each activity, for example 'Swimming',
+          what members should bring, how long it takes and certain things to
+          take into account. The list of possible activities is completed and
+          then used to plan activities. The list is then also used to
+          communicate to members and their parents.
+        </p>
+        <p>
+          The responsibility for coordinating these activities lies with the
+          'leader'. The email address of the leader will be communicated so that
+          members and parents can ask questions.
+        </p>
+        <p>
+          The purpose of the system is to keep track of membership records where
+          we want to be able to answer the following questions:
+        </p>
+        <ul>
+          <li>What groups do we have?</li>
+          <li>What members do we have this year?</li>
+          <li>What members did we have last year?</li>
+          <li>What members do we have from a certain age group?</li>
+          <li>What members have paid registration fees?</li>
+          <li>Which members are in which group?</li>
+          <li>What leadership do we have?</li>
+          <li>Who leads which group?</li>
+          <li>What activities are planned for a particular group?</li>
+          <li>Who is responsible for coordinating the planned activities?</li>
+          <li>When are the different activities planned?</li>
+          <li>Where will the activities take place?</li>
+        </ul>
+      </div>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <p>
+          The nouns eligible for an entity type are: Member, Enrolment, Age
+          Class, Group, Activity and Activity type.
+        </p>
+        <figure class="center">
+          <img src="../../assets/drawio/model_conceptueel_oefening1_oplossing_afb01.svg" alt="Oplossing oefening Conceptueel.1">
+        </figure>
+      </div>
+      
+</section>
+
+    <h2>Exercise 2: youth club: attributes</h2>
+    <section class="taak">
+  <div>
+        <p>
+          Go back to conceptual.1 and determine for each of the entity types
+          which attributes you find in the text. The attributes should allow you
+          to describe the entities. Ask yourself the following questions:
+        </p>
+        <ul>
+          <li>What properties should I track for each of the entity types?</li>
+          <li>
+            What information is necessary for my application? Can I find this
+            information in the attributes?
+          </li>
+          <li>
+            Are certain entity types missing to structure the necessary data? Is
+            it difficult to place certain attributes with the entity types you
+            have identified?
+          </li>
+          <li>
+            Are there certain entity types that only have one attribute? Are we
+            sure that this is an entity type with one attribute, or an attribute
+            of another entity type? For example, if we want to keep track of a
+            person's age, then we could identify an entity type 'Age' with the
+            attribute 'Age'. On the other hand, this could also simply be an
+            attribute of the entity type 'Person', without making our data model
+            unnecessarily complex.
+          </li>
+        </ul>
+        <p>
+          Expand your ERD in draw.io with your attributes. (TIP: you can
+          duplicate a tab in diagrams.net. You can then build on the answer of a
+          previous question, without losing the answer to the first question).
+        </p>
+      </div>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <p>
+          Below is an overview of the different attributes that were identified
+          for each of the entity types:
+        </p>
+        <figure class="center">
+          <img src="../../assets/drawio/model_conceptueel_oefening2_oplossing_afb01.svg" alt="Oplossing oefening Conceptueel.2">
+        </figure>
+      </div>
+      
+</section>
+
+    <h2>Exercise 3: youth club: relationships</h2>
+    <section class="taak">
+  <div>
+        <p>
+          Build on the results of exercise conceptual.2 and explore for the
+          various relationships that exist between entity types. Describe the
+          relationships with a clear name and specify the cardinality for each
+          of the relationship's entity types. Ask the following questions when
+          doing so:
+        </p>
+        <ul>
+          <li>
+            Do the relationships allow all the links and information to be
+            incorporated?
+          </li>
+          <li>Are all entity types connected?</li>
+        </ul>
+        <p>Expand your ERD in diagrams.net with your relationships.</p>
+      </div>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <p>
+          The ERD below contains the relationships with their cardinalities.
+        </p>
+        <figure class="center">
+          <img src="../../assets/drawio/model_conceptueel_oefening3_oplossing_afb01.svg" alt="Oplossing oefening Conceptueel.3">
+        </figure>
+      </div>
+      
+</section>
+
+    <!-- 
+
+    <h2>Exercise 4: youth club: types of attributes</h2>
+    <Taak oplossing={true}>
+      <div slot="opgave">
+        <p>
+          Go back to the result of exercise conceptual.3 and refine your
+          result with the correct types of attributes. Does the notation of your
+          attributes match the type? Are there certain relations that an
+          attribute?
+        </p>
+
+        <p>Expand your ERD in diagrams.net with your relationships.</p>
+      </div>
+      <div slot="opl" class="oplossing">
+        <figure class="center">
+          <img
+            src="/assets/drawio/model_conceptual_exercise5_solution_afb01.svg"
+            alt="Solution exercise conceptual.5"
+          />
+        </figure>
+      </div>
+    </Taak>
+
+    <h2>Exercise 5: car rental company</h2>
+    <p>
+      For the following exercises, in a number of steps, we are going to draw out an ERD
+      drawing out. Each step adds a piece of logic and/or complexity.
+      Clearly describe the entities, attributes and relationships. For each
+      of the relationships, clearly state the cardinality of each of the entity types
+      indicate. As the different tasks build on each other, you can
+      duplicate a tab in diagrams.net. This allows you to keep an overview
+      of your work and can distinguish the different steps.
+    </p>
+    <figure class="center">
+      <img src="/assets/conceptual/car-rental.jpg" alt="" />
+    </figure>
+
+    <h4>Step 1</h4>
+
+    <Taak oplossing={true}>
+      <div slot="opgave">
+        <p>
+          A car rental company rents cars to customers. At the first
+          rental, customers are assigned a customer number. For each customer
+          we also keep the name, first name, address, e-mail address and mobile phone number of each customer.
+          For each car, we keep a record of its make, model, number plate and chassis number.
+          chassis number. Our system should generate a record of:
+        </p>
+        <ul>
+          <li>the customers currently renting a car</li>
+          <li>
+            the car and which customers they are currently with
+          </li>
+          <li>
+            the cars and when they are available for a next rental
+          </li>
+        </ul>
+      </div>
+      <div slot="opl" class="oplossing">
+        <figure class="center">
+          <img
+            src="/assets/drawio/model_conceptual_exercise4_solution_afb01.svg"
+            alt="Solution exercise conceptual.4.1"
+          />
+        </figure>
+      </div>
+    </Taak>
+
+    <h4>Step 2</h4>
+
+    <Taak oplossing={true}>
+      <div slot="opgave">
+        <p>
+          A car rental company rents cars to customers. Customers can
+          book a type of car in advance, indicating when they would like to pick up the
+          car and when they would like to return it.
+          return it. On first hire, customers are given a
+          customer number. We also keep the name of each customer,
+          first name, address, e-mail address and mobile phone number of each customer. For each car, we keep
+          make, model, number plate and chassis number. Our system must
+          generate an overview of:
+        </p>
+        <ul>
+          <li>the reservations made by the customers</li>
+          <li>the customers who are currently renting a car</li>
+          <li>
+            the car and which customers they are currently with
+          </li>
+          <li>
+            the cars and when they are available for a next rental
+          </li>
+        </ul>
+        <p>
+          TIP: For those who have never rented a car before, pay a
+          visit one of the online car rental companies. Ask yourself the
+          question, what am I actually booking?
+        </p>
+      </div>
+      <div slot="opl" class="oplossing">
+        <figure class="center">
+          <img
+            src="/assets/drawio/model_conceptual_exercise4_solution_afb02.svg"
+            alt="Solution exercise conceptual.4.2"
+          />
+        </figure>
+      </div>
+    </Taak>
+
+    <h4>Step 3</h4>
+
+    <Taak oplossing={true}>
+      <div slot="opgave">
+        <p>
+          A car rental company rents cars to customers. Customers can
+          book a type of car in advance, indicating when they would like to pick up the
+          car and when they would like to return it.
+          return it. On first hire, customers are given a
+          customer number. We also keep the name of each customer,
+          first name, address, e-mail address and mobile phone number of each customer. For each car, we keep
+          make, model, number plate and chassis number. Our system must
+          generate an overview of:
+        </p>
+
+        <ul>
+          <li>the reservations made by the customers</li>
+          <li>the customers who are currently renting a car</li>
+          <li>
+            the car and which customers they are currently with
+          </li>
+          <li>
+            the cars and when they are available for a next rental
+          </li>
+          <li>
+            of all wagons rented in the past by a particular customer
+            rented in the past
+          </li>
+          <li>
+            Of all customers who have rented a particular car in the past
+            rented
+          </li>
+        </ul>
+      </div>
+      <div slot="opl" class="oplossing">
+        <figure class="center">
+          <img
+            src="/assets/drawio/model_conceptual_exercise4_solution_afb03.svg"
+            alt="Solution exercise conceptual.4.3"
+          />
+        </figure>
+      </div>
+    </Taak>
+    <h2>Exercise 6: student administration</h2>
+    <p>
+      For the next exercises, we are going to use a number of steps to draw out an ERD
+      out. Each step adds a piece of logic and/or complexity.
+      Clearly describe the entities, attributes and relationships. For each
+      of the relationships, clearly state the cardinality of each of the entity types
+      indicate. As the different tasks build on each other, you can
+      duplicate a tab in diagrams.net. This allows you to keep an overview
+      of your work and can distinguish the different steps.
+    </p>
+    <figure class="center">
+      <img src="/assets/conceptual/kuloket.png" alt="" />
+    </figure>
+
+    <h4>Step 1</h4>
+
+    <Taak oplossing={true}>
+      <div slot="opgave">
+        <p>
+          A student can take one or more course units, each
+          course unit is taught by one lecturer. Lecturers teach
+          to students. A student's name, first name, address, and
+          age. A lecturer's name, first name, discipline
+          and number of years in service. For each course unit
+          we keep the code and name of the course unit.
+        </p>
+      </div>
+      <div slot="opl" class="oplossing">
+        <figure class="center">
+          <img
+            src="/assets/drawio/model_conceptual_exercise6_solution_afb01.svg"
+            alt="Solution exercise conceptual.6.1"
+          />
+        </figure>
+      </div>
+    </Taak>
+
+    <h4>Step 2</h4>
+
+    <Taak oplossing={true}>
+      <div slot="opgave">
+        <p>
+          A student can take one or more course units, each
+          course unit is taught by one lecturer. Lecturers teach
+          to students. <em
+            >We want to be able to generate a list where we get an overview
+            </em
+          > Of a student, name, first name, address, and age are kept.
+          A lecturer's name, first name, discipline and years of service are
+          are kept. For each course unit we keep the code and name of the course unit.
+          the course unit. We must be able to give the overview for the current academic year.
+          be able to give.
+        </p>
+      </div>
+      <div slot="opl" class="oplossing">
+        <p>
+          We can generate the list based on the previous result. There
+          should not be added.
+        </p>
+        <figure class="center">
+          <img
+            src="/assets/drawio/model_conceptual_exercise6_solution_afb02.svg"
+            alt="Solution exercise conceptual.6.2"
+          />
+        </figure>
+      </div>
+    </Taak>
+
+    <h4>Step 3</h4>
+
+    <Taak oplossing={true}>
+      <div slot="opgave">
+        <p>
+          A student can take one or more course units, each
+          course unit is taught by <em
+            >one or more lecturers</em
+          >. Lecturers teach students. We want to be able to
+          generate a list giving us an overview of which students are taught
+          from which lecturers. A student's name, first name,
+          address and age. Of a lecturer, name, first name,
+          discipline and number of years in service. For each
+          course unit, we keep the code and name of the
+          course unit. We must be able to give the overview for the current
+          academic year to be able to give it.
+        </p>
+      </div>
+      <div slot="opl" class="oplossing">
+        <figure class="center">
+          <img
+            src="/assets/drawio/model_conceptual_exercise6_solution_afb03.svg"
+            alt="Solution exercise conceptual.6.3"
+          />
+        </figure>
+      </div>
+    </Taak>
+
+    <h4>Step 4</h4>
+
+    <Taak oplossing={true}>
+      <div slot="opgave">
+        <p>
+          A student may take one or more course units, <em
+            >each course unit is coordinated by one lecturer, but
+            is taught by one or more lecturers</em
+          >. Lecturers teach students. We want to be able to
+          generate a list where we get an overview of which students are taught
+          are taught by which professors. A student's name, first name,
+          address and age. Of a lecturer, name, first name,
+          discipline and number of years in service. For each
+          course unit, we keep the code and name of the
+          course unit. We must be able to give the overview for the current
+          academic year to be able to give it.
+        </p>
+      </div>
+      <div slot="opl" class="oplossing">
+        <figure class="center">
+          <img
+            src="/assets/drawio/model_conceptual_exercise6_solution_afb04.svg"
+            alt="Solution exercise conceptual.6.4"
+          />
+        </figure>
+      </div>
+    </Taak>
+
+    <h4>Step 5</h4>
+
+    <Taak oplossing={true}>
+      <div slot="opgave">
+        <p>
+          A student may take one or more course units, each
+          course unit is coordinated by one lecturer, but is
+          taught by one or more lecturers. Lecturers teach
+          students. We want to be able to generate a list where we get an
+          overview of which students are taught by which lecturers.
+          A student's name, first name, address and age are recorded.
+          The name, first name, <em
+            >the various disciplines he/she belongs to</em
+          > and number of years in service. For each course unit we keep
+          we keep the code and name of the course unit. We must be able to give the overview
+          for the current academic year.
+        </p>
+      </div>
+      <div slot="opl" class="oplossing">
+        <p>
+          You can already solve this in two ways, on the one hand with an
+          entity type 'Discipline', on the other hand with a multiple attribute
+          'Discipline'. Both solutions are correct.
+        </p>
+        <figure class="center">
+          <img
+            src="/assets/drawio/model_conceptual_exercise6_solution_afb05a.svg"
+            alt="Solution exercise conceptual.6.5.a"
+          />
+        </figure>
+
+        <figure class="center">
+          <img
+            src="/assets/drawio/model_conceptual_exercise6_solution_afb05b.svg"
+            alt="Solution exercise conceptual.6.5.b"
+          />
+        </figure>
+      </div>
+    </Taak>
+
+    <h4>Step 6</h4>
+
+    <Taak oplossing={true}>
+      <div slot="opgave">
+        <p>
+          A student may take one or more course units, each
+          course unit is coordinated by one lecturer, but is
+          taught by one or more lecturers. Lecturers teach
+          students. We want to be able to generate a list where we get an
+          overview of which students are taught by which lecturers.
+          A student's name, first name, address and age are recorded.
+          A lecturer's name, first name, the various disciplines he/she
+          to which he/she belongs and years of service. Of
+          each course unit we keep the code and name of the course unit.
+          course unit. <em
+            >For each course unit taken by a student,
+            we keep track of the points the student has earned on this course unit
+            has earned</em
+          >. We should be able to provide the summary for the current academic year.
+        </p>
+      </div>
+      <div slot="opl" class="oplossing">
+        <figure class="center">
+          <img
+            src="/assets/drawio/model_conceptual_exercise6_solution_afb06.svg"
+            alt="Solution exercise conceptual.6.6"
+          />
+        </figure>
+      </div>
+    </Taak>
+
+    <h4>Step 7</h4>
+
+    <Taak oplossing={true}>
+      <div slot="opgave">
+        <p>
+          A student may take one or more course units, each
+          course unit is coordinated by one lecturer, but is
+          taught by one or more lecturers. Lecturers teach
+          students. We want to be able to generate a list where we get an
+          overview of which students are taught by which lecturers.
+          A student's name, first name, address and age are recorded.
+          A lecturer's name, first name, the various disciplines he/she
+          to which he/she belongs and years of service. Of
+          each course unit we keep the code and name of the course unit.
+          course unit. For each course unit taken by a
+          student, we keep track of the points earned by the student on this
+          course unit. <em
+            >The student chooses an internship within a particular discipline</em
+          >. We should be able to provide the summary for the current academic year.
+        </p>
+      </div>
+      <div slot="opl" class="oplossing">
+        <figure class="center">
+          <img
+            src="/assets/drawio/model_conceptual_exercise6_solution_afb07.svg"
+            alt="Solution exercise conceptual.6.7"
+          />
+        </figure>
+      </div>
+    </Taak>
+
+    <h4>Step 8</h4>
+
+    <Taak oplossing={true}>
+      <div slot="opgave">
+        <p>
+          A student may take one or more course units, each
+          course unit is coordinated by one lecturer, but is
+          taught by one or more lecturers. Lecturers teach
+          students. We want to be able to generate a list where we get an
+          overview of which students are taught by which lecturers.
+          A student's name, first name, address and age are recorded.
+          A lecturer's name, first name, the various disciplines he/she
+          to which he/she belongs and years of service. Of
+          each course unit we keep the code and name of the course unit.
+          course unit. For each course unit taken by a
+          student, we keep track of the points earned by the student on this
+          course unit. The student chooses a work placement within
+          a particular discipline, <em
+            >where a lecturer is designated as a coach for the internship</em
+          >. We should be able to provide the overview for the current academic year.
+        </p>
+      </div>
+      <div slot="opl" class="oplossing">
+        <figure class="center">
+          <img
+            src="/assets/drawio/model_conceptual_exercise6_solution_afb08.svg"
+            alt="Solution exercise conceptual.6.8"
+          />
+        </figure>
+      </div>
+    </Taak>
+
+    <h4>Step 9</h4>
+
+    <Taak oplossing={true}>
+      <div slot="opgave">
+        <p>
+          A student may take one or more course units, each
+          course unit is coordinated by one lecturer, but is
+          taught by one or more lecturers. Lecturers teach
+          students. We want to be able to generate a list where we get an
+          overview of which students are taught by which lecturers.
+          A student's name, first name, address and age are recorded.
+          A lecturer's name, first name, the various disciplines he/she
+          to which he/she belongs and years of service. Of
+          each course unit we keep the code and name of the course unit.
+          course unit. For each course unit taken by a
+          student, we keep track of the points earned by the student on this
+          course unit. The student chooses an internship within
+          a particular discipline, with a lecturer designated as a
+          coach for the internship.
+          <em
+            >The discipline of the internship must match the discipline of
+            the lecturer. (Is it possible to add conditions to an ERD
+            add conditions?)</em
+          >We should be able to give the overview for the current academic year.
+        </p>
+      </div>
+      <div slot="opl" class="oplossing">
+        <p>
+          It is not possible to add conditions to an ERD. The
+          result therefore remains unchanged.
+        </p>
+        <figure class="center">
+          <img
+            src="/assets/drawio/model_conceptual_exercise6_solution_afb09.svg"
+            alt="Solution exercise conceptual.6.9"
+          />
+        </figure>
+      </div>
+    </Taak>
+
+    <h4>Step 10</h4>
+
+    <Taak oplossing={true}>
+      <div slot="opgave">
+        <p>
+          A student may take one or more course units, each
+          course unit is coordinated by one lecturer, but is
+          taught by one or more lecturers. Lecturers teach
+          students. We want to be able to generate a list where we get an
+          overview of which students are taught by which lecturers.
+          A student's name, first name, address and age are recorded.
+          A lecturer's name, first name, the various disciplines he/she
+          to which he/she belongs and years of service. Of
+          each course unit we keep the code and name of the course unit.
+          course unit. <em
+            >A course unit can be taught on different campuses.
+            campuses. Each campus has a name and address.</em
+          > For each course unit taken by a student, we keep track of the points the student has earned on this course unit.
+          we keep track of the points the student has earned on this course unit.The
+          student chooses an internship within a particular discipline, where a lecturer
+          is designated as a coach for the internship. The discipline of the internship
+          should correspond to the lector's discipline. We should be able to give the overview
+          for the current academic year.
+        </p>
+      </div>
+      <div slot="opl" class="oplossing">
+        <figure class="center">
+          <img
+            src="/assets/drawio/model_conceptual_exercise6_solution_afb010.svg"
+            alt="Solution exercise conceptual.6.10"
+          />
+        </figure>
+      </div>
+    </Taak>
+
+    <h4>Step 11</h4>
+
+    <Taak oplossing={true}>
+      <div slot="opgave">
+        <p>
+          A student may take one or more course units, each
+          course unit is coordinated by one lecturer, but is
+          taught by one or more lecturers. Lecturers teach
+          students. We want to be able to generate a list where we get an
+          overview of which students are taught by which lecturers.
+          A student's name, first name, address and age are recorded.
+          A lecturer's name, first name, the various disciplines he/she
+          to which he/she belongs and years of service. Of
+          each course unit we keep the code and name of the course unit.
+          course unit.
+          <em
+            >Some course units build on existing
+            course units and can only be taken if the
+            student has taken that course unit. A course may give access
+            to several courses. A course may also require that
+            several other courses must have been taken previously.</em
+          > A course unit may be taught at different campuses.
+          Each campus has a name and address. For each course unit that
+          taken by a student, we keep track of the points the student
+          The student chooses an internship within
+          a particular discipline, where a lecturer is designated as a coach
+          for the internship. The discipline of the internship must match the discipline
+          of the lecturer. We should be able to provide the overview for the current academic year.
+          give.
+        </p>
+      </div>
+      <div slot="opl" class="oplossing">
+        <figure class="center">
+          <img
+            src="/assets/drawio/model_conceptual_exercise6_solution_afb011.svg"
+            alt="Solution exercise conceptual.6.11"
+          />
+        </figure>
+      </div>
+    </Taak>
+
+    <h4>Step 12</h4>
+
+    <Taak oplossing={true}>
+      <div slot="opgave">
+        <p>
+          A student may take one or more course units, each
+          course unit is coordinated by one lecturer, but is
+          taught by one or more lecturers. Lecturers teach
+          students. We want to be able to generate a list where we get an
+          overview of which students are taught by which lecturers.
+          A student's name, first name, address and age are recorded.
+          A lecturer's name, first name, the various disciplines he/she
+          to which he/she belongs and years of service. Of
+          each course unit we keep the code and name of the course unit.
+          course unit. Some course units build on
+          existing course units and can only be taken if
+          the student has taken that course unit. A course unit can give access
+          to several courses. A course may also require several
+          other courses must have been taken previously. A course unit may
+          be taught on different campuses. Each campus has a name
+          and an address. For each course unit taken by a student, we
+          We keep track of the points the student has earned on this course unit.
+          course unit.The student chooses an internship within
+          a particular discipline, with a lecturer designated as a
+          coach for the internship. The discipline of the internship must match
+          the discipline of the lecturer. <em
+            >We should be able to give the overview for the current and all past
+            academy years can give.</em
+          >
+        </p>
+      </div>
+      <div slot="opl" class="oplossing">
+        <figure class="center">
+          <img
+            src="/assets/drawio/model_conceptual_exercise6_solution_afb012.svg"
+            alt="Solution exercise conceptual.6.12"
+          />
+        </figure>
+      </div>
+    </Taak>
+
+    <h2>Exercise 7: library</h2>
+
+    <p>
+      For the following exercises, we are going to use a number of steps to draw out an ERD
+      out. Each step adds a piece of logic and/or complexity.
+      Clearly describe the entities, attributes and relationships. For each
+      of the relationships, clearly state the cardinality of each of the entity types
+      indicate. As the different tasks build on each other, you can
+      duplicate a tab in diagrams.net. This allows you to keep an overview
+      of your work and can distinguish the different steps.
+    </p>
+
+    <figure class="center">
+      <img
+        src="/assets/conceptual/mechelen_the_public_library_be_001.jpg"
+        alt=""
+      />
+    </figure>
+
+    <h4>Step 1</h4>
+
+    <Taak oplossing={true}>
+      <div slot="opgave">
+        <p>
+          A library lends out books. Each book is identified by an
+          ISBN number, a title and one or more authors. Of one particular
+          book we may have several copies, which is why we give each
+          book a copy number. The ISBN and the copy number allow us
+          to uniquely identify each book. To borrow a book, you must
+          be a member of the library. When a member borrows a
+          borrowing a book, he or she registers. When the member
+          subscribes, received with the name, first name, address, e-mail address and
+          mobile phone number. We then also assign a member number. The library wants to
+          know which books are currently borrowed. When a book
+          is not returned on time, a fine is recorded. We
+          want to be able to generate an overview of outstanding fines.
+        </p>
+      </div>
+      <div slot="opl" class="oplossing">
+        <p>
+          We can solve this in two ways. We can model the different
+          relationships as a combination of binary relationships.
+        </p>
+        <figure class="center">
+          <img
+            src="/assets/drawio/model_conceptual_exercise7_solution_afb01a.svg"
+            alt="Solution exercise conceptual.7.1.a"
+          />
+        </figure>
+        <p>
+          The disadvantage of this is that we cannot directly find out for
+          which borrowing a particular penalty was given. Alternatively, we can
+          model this as a ternary relationship. Here, an onlening can
+          can optionally be linked to a penalty. This option is preferred
+          because we can track more information.
+        </p>
+        <figure class="center">
+          <img
+            src="/assets/drawio/model_conceptual_exercise7_solution_afb01b.svg"
+            alt="Solution exercise conceptual.7.1.b"
+          />
+        </figure>
+      </div>
+    </Taak>
+
+    <h4>Step 2</h4>
+
+    <Taak oplossing={true}>
+      <div slot="opgave">
+        <p>
+          A library lends out books. <em
+            > However, we also have books that are too valuable to lend out.
+            These can only be consulted in the library.</em
+          > Each book is identified by an ISBN number, a title and one or more
+          authors. We may have several copies of one particular book,
+          that is why we give each book a copy number. The ISBN and the copy number
+          allow us to uniquely identify each book. To borrow a book
+          you must be a member of the library. When a member borrows a book for the first time
+          borrowing a book, he or she registers. When the member subscribes,
+          received with the name, first name, address, e-mail address and mobile phone number. We then
+          then also assign a member number. The library wants to know which books are currently
+          currently borrowed. When a book is not returned on time,
+          a fine is recorded. We want to be able to generate an overview
+          of outstanding fines.
+        </p>
+      </div>
+      <div slot="opl" class="oplossing">
+        <figure class="center">
+          <img
+            src="/assets/drawio/model_conceptual_exercise7_solution_afb02.svg"
+            alt="Solution exercise conceptual.7.2"
+          />
+        </figure>
+      </div>
+    </Taak>
+
+    <h4>Step 3</h4>
+
+    <Taak oplossing={true}>
+      <div slot="opgave">
+        <p>
+          A library lends out books. However, we also have books that are too
+          valuable to lend out. These can only be consulted
+          in the library. Each book is identified by an ISBN number, a
+          title and one or more authors. We may have
+          have several copies, which is why we give each book a
+          copy number. The ISBN and the copy number allow us to identify each
+          book to be uniquely identified. To borrow a book, you must be a member
+          of the library. When a member borrows a book for the first time
+          borrows a book, he or she registers. When the member
+          subscribes, received with the name, first name, address, e-mail address and
+          mobile phone number. We then also assign a member number. The library wants to
+          know which books are currently borrowed. When a book
+          is not returned on time, a fine is recorded. We
+          want to be able to generate an overview of outstanding fines. <em
+            >The librarian not only wants an overview of which books are currently
+            currently lent, but also which books are most or least
+            borrowed, which books are most or least consulted
+            are consulted and which members most often return books late.</em
+          >
+        </p>
+      </div>
+      <div slot="opl" class="oplossing">
+        <figure class="center">
+          <img
+            src="/assets/drawio/model_conceptual_exercise7_solution_afb03.svg"
+            alt="Solution exercise conceptual.7.3"
+          />
+        </figure>
+      </div>
+    </Taak>
+
+    <h2>Exercise 8: board game association</h2>
+
+    <p>
+      Create an ERD diagram for the following description. Clearly state the
+      cardinality of the relationships and the attributes of the entity types.
+    </p>
+    <figure class="center">
+      <img src="/assets/conceptual/IMG_1656.jpeg" alt="" />
+    </figure>
+
+    <Taak oplossing={true}>
+      <div slot="opgave">
+        <p>
+          A board game association wants to develop an application to support their operation
+          support. The association organises tournaments for the
+          various members of the association. A tournament revolves around one
+          specific board game. Typically we give a funny name to easily
+          communicate to the members. The aim is to declare a member the winner of
+          the tournament. Members sign up for the tournament. On
+          basis of the entries, competitions are organised. Each
+          match is scheduled at a specific date and time
+          scheduled. The competitions take place at the association centre. Each
+          table has a number. For the matches keep track of which table
+          the match is scheduled. Each match is played by a number
+          of the members of the association. At each match, one of the
+          members takes the role of gamekeeper. This person is responsible for recording the
+          individual scores of the players. The members are
+          registered in the system so that they can participate in matches
+          and take up the role of game leader. For each member, we keep name,
+          e-mail address and date of birth. Members can introduce other members
+          apply. We have a catalogue of games that we use to organise the
+          tournaments and competitions. Of each game, we need to know the
+          name, the number of players and the edition. A board game can either be a
+          base game, or an expansion. If it is an
+          expansion, we want to know from which base game it is an expansion
+          is. Of each board game, we want a list of members who
+          can lead games of the board game. At any time, we need to
+          be able to create an overview of:
+        </p><ul>
+          <li>the schedule of tournaments and matches</li>
+          <li>
+            the matches played, which members participated and the
+            scores achieved by the members
+          </li>
+          <li>the winners of the various tournaments</li>
+          <li>the catalogue of board games, with possible game leaders</li>
+        </ul>
+      </div>
+      <div slot="opl" class="oplossing">
+        <figure class="center">
+          <img
+            src="/assets/drawio/model_conceptual_exercise8_solution_afb01.svg"
+            alt="Solution exercise conceptual.8"
+          />
+        </figure>
+      </div>
+    </Taak>
+    -->
+  </main>
+
+    <footer>
+      <div class="container">
+        <p>
+          <img src="../../assets/Logo_UCLL_negatief_RGB.png" width="100" height="53" alt="Logo UCLL Hogeschool"><br>&copy; 2023 — Steven Engels, Jan Van Hee
+        </p>
+        <p><a href="#top">&uarr; Go to top</a></p>
+      </div>
+    </footer>
+    <script src="../../assets/js/func2.js"></script>
+  </body>
+
+<!-- Mirrored from df.webontwerp.ucll.be/EN/model_conceptueel_oefeningen/ by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 18 Dec 2023 15:09:12 GMT -->
+</html>

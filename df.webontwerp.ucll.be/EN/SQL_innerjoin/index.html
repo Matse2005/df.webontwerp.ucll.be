@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="nl">
+  
+<!-- Mirrored from df.webontwerp.ucll.be/EN/SQL_innerjoin/ by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 18 Dec 2023 15:09:15 GMT -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../assets/styles/stijl.css">
+    <link rel="stylesheet" href="../../../cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/vs2015.min.css">
+    <script src="../../../cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+    <title>SQL: INNER JOIN</title>
+  </head>
+
+  <body>
+    <header id="top">
+      <div class="container">
+        <nav>
+          <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../leerpad/index.html"></a></li>
+            <li><a href="../model_menu/index.html">Data modelling</a></li>
+            <li><a href="../SQL_menu/index.html">SQL</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    
+  <main>
+    <blockquote>
+      <p>
+        <span class="citaat">No night of drinking or drugs or sex could ever compare to a long
+          evening of productive hacking.</span>
+        <br>
+        &mdash;Lynn Voedisch
+      </p>
+    </blockquote>
+    <h1>Combining tables with INNER JOIN</h1>
+    <p>
+      In previous chapters, all components of a <code>SELECT</code> query have been
+      have been reviewed, except for one: the <code>FROM</code> component. There was
+      much to say about it either, since we only had one table anyway. In
+      this section, we use multiple tables in a query.
+    </p>
+
+    <p>
+      Next video explains the principles of <em>the cartesian product</em> and <em>join</em>well explained. Watch it first, then follow the text below and do the exercises
+      found in the text.
+    </p>
+
+    <div class="iframewrapper">
+      <iframe class="preview-iframe" width="560" height="315" src="https://www.youtube.com/embed/58i-sZ6h1mI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+
+    <h2>Implicit JOIN</h2>
+    <p>
+      We'll use a simple example to explain the principle. Suppose
+      that you want a list of the mail addresses of all OPO coordinators as
+      in the figure below. After the <a href="../../NL/SQL_anopveel/index.html">previous chapter</a> you should have two linked tables in your own schema: '‘lector’'
+      and ‘opleidingsonderdeel’.
+
+
+    </p>
+    <figure class="center">
+      <img src="../../assets/join/join_vb1.png" width="400" alt="Alle mailadressen van de coördinatoren van elk OPO">
+    </figure>
+    <section class="taak">
+  <p>
+        Now work out the following example by trying out the code of all the steps
+        in your own schema. Do not forget to specify the name of your schema
+        for each table, or set your search_path correctly. In the
+        code examples below we chose the latter solution.
+      </p>
+  
+        <button>Show / hide solution</button>
+        
+      
+</section>
+    <h3>Cartesian product of multiple tables</h3>
+    <p>
+      The lector table contains 18 rows, which you can easily do with a <code>COUNT(*)</code> can check:<pre><code>SELECT COUNT(*)
+FROM lector</code></pre>
+    </p>
+
+    <section class="taak">
+  <p>How many rows does the table contain ‘opleidingsonderdeel’?</p>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <p>This table contains 21 rows.</p>
+      </div>
+      
+</section>
+
+    <section class="taak">
+  <p>
+        Now try out the following code and try to figure out from the output
+        figure out what it does:<pre><code>SELECT *
+FROM lector, opleidingsonderdeel</code></pre>
+      </p>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <p>
+          By specifying in the <code>FROM</code> component two tables (separated
+          by a comma) <em>
+            each row of the table becomes‘lector’ linked to each row of the
+            second table ‘opleidingsonderdeel’
+          </em>. Each of the 18 lecturer rows is thus combined with each of the
+          21 OPOs. That gives a total of 18 × 21 = 378 rows in the result. Your
+          will need the horizontal scroll bar in the result field, because
+          these rows will be long since all the columns of both tables
+          together are present in the result.
+        </p>
+      </div>
+      
+</section>
+    <p>
+      This product - a set in which each row from the first table occurs with
+      each row from the second table - is called the <em>cartesian product</em>.
+      called. Listing two tables after the word <code>FROM</code> is an
+      <em>implicit</em> join. We will ask later to always use an <em>explicit</em>join, but for now we'll do it this way.
+    </p>
+
+    <h3>Selecting columns in the cartesian product</h3>
+    <p>
+      You know that the <code>FROM</code> component is always <em>be run first</em>. In this case, it loads the cartesian product of both tables into the
+      working memory. The <code>SELECT</code> comes later. It selects certain
+      columns.
+    </p>
+    <section class="taak">
+  <div>
+        <p>
+          Try this code:<pre><code>SELECT opocode, coordinator, lector_id, email
+FROM lector, opleidingsonderdeel</code></pre>
+        </p>
+        <p>
+          Now suppose that, in addition to these four columns, you also want to show the name of the OPO
+          to be displayed, a simple addition of this column in the<code>SELECT</code> … <pre><code>SELECT opocode, naam, coordinator, lector_id, email
+FROM lector, opleidingsonderdeel</code></pre>
+        </p>
+        <p>
+          ... you would think. However, you get an error message:<pre><code>ERROR: column reference &quot;naam&quot; is ambiguous
+LINE 2: SELECT opocode, naam,coordinator,lector_id,email</code></pre>
+        </p>
+        <p>
+          What goes wrong? Then modify the <code>SELECT</code> so that you also see the OPO name
+          will also be displayed.
+        </p>
+      </div>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <p>
+          
+
+            The database server informs that the requested column 'naam'
+            is ambiguous ('ambiguous'). In fact, there are two columns of 'name'.
+            You can remove this ambiguity by prefixing the name of the column
+            preceded by the name of the table, i.e. something in the style
+            of <code>SELECT table name.column name</code>. <em>If there is no ambiguity, the column name is of course
+              sufficient!</em>
+        </p>
+        <p>
+          This could then be a possible solution:<pre><code>SELECT opocode, opleidingsonderdeel.naam, coordinator, lector_id, email
+FROM lector, opleidingsonderdeel</code></pre>
+        </p>
+      </div>
+      
+</section>
+
+    <h3>Alias for table names</h3>
+    <p>
+      
+      
+      You should regularly specify the column by writing the table name in front of it.
+      writing the table name in front of it. That's a fair amount of typing. A shorter option is to use
+      of an <em>alias</em> (also called a "pseudonym"). You temporarily replace
+      so to speak, temporarily replace the name of the table with something shorter (often only one or a
+      few letters). Compare subsequent versions of the same query. First the long
+      version:
+      <pre><code>SELECT opocode, opleidingsonderdeel.naam, coordinator, lector_id, lector.naam, email
+FROM lector, opleidingsonderdeel</code></pre>
+    </p>
+    <p>
+      Shorter and therefore possibly easier to read is this version with two
+      aliases:<pre><code>SELECT opocode, O.naam, coordinator, lector_id, L.naam, email
+FROM lector AS L, opleidingsonderdeel AS O</code></pre>
+    </p>
+    <p>
+      You may possibly omit the word <code>AS</code> and so it can be a little more
+      shorter:<pre><code>SELECT opocode, O.naam, coordinator, lector_id, L.naam, email
+FROM lector L, opleidingsonderdeel O</code></pre>
+    </p>
+
+    <section class="taak">
+  <div>
+        <p>
+          Try making the combination where you define an <em>alias</em>,
+          but still use the full name of the table in the<code>SELECT</code> By testing out the following code:<pre><code>SELECT opocode, opleidingsonderdeel.naam, coordinator, lector_id, L.naam, email
+FROM lector L, opleidingsonderdeel O</code></pre>
+        </p>
+        <p>What do you decide?</p>
+      </div>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <p>
+          The error message will help you further:<pre><code>ERROR:  invalid reference to FROM-clause entry for table &quot;opleidingsonderdeel&quot;
+LINE 2: SELECT opocode, opleidingsonderdeel.naam, coordinator, lecto...
+                        ^
+HINT:  Perhaps you meant to reference the table alias &quot;o&quot;.
+SQL state: 42P01
+Character: 50</code></pre>
+        </p>
+        <p>
+          Specifically, this means that <em>once you have defined an alias for a table name, you are
+            are obliged to use that alias</em>. At that point, the table name is temporarily replaced by the alias!
+        </p>
+      </div>
+      
+</section>
+
+    <h3>Join condition</h3>
+    <p>
+      Because of the implicit join in the <code>FROM</code> component, you have the <em>cartesian product</em> created: a combination of each row of one table with each row of the
+      second table. So a total of 378 combinations of rows. That long list must
+      You must now limit that long list to the "meaningful" rows. Removing or keeping rows is done
+      with a <code>WHERE</code>. This <code>WHERE</code> we call the 'join condition'
+      or 'join condition'.
+    </p>
+    <p>
+      What are the <em>sense</em> rows here? Each coordinator of each OPO will be
+      paired with any lecturer. However, we were only looking for the
+      email address of the coordinator. <em>The only meaningful rows then are those where the coordinator in the OPO table
+        equals the lecturer_id in the lecturer table:</em><pre><code>SELECT opocode, email
+FROM lector, opleidingsonderdeel
+WHERE coordinator = lector_id -- join conditie</code></pre>
+    </p>
+    <p>
+      Of the 378 rows in the cartesian product, only 21 satisfy this
+      condition. This makes sense: there are 21 OPOs and each OPO has
+      precisely one coordinator. <a href="#Implicit-JOIN">The figure at the beginning of this chapter</a> shows the result in pgAdmin.
+    </p>
+
+    <section class="taak">
+  <div>
+        <p>
+          <em>
+            This exercise covers a lot of things from previous chapters
+            covered.
+          </em> Write the query that, for each OPO of less than 6 credits, returns the
+          following: the name of the OPO, the number of credits, first name
+          and last name of the coordinator in one column, and the year in which that OPO
+          was first on the program of study. Sort according to
+          increasing number of credits. For equal number of credits, continue
+          sort according to year (newest first). You should obtain the following figure
+          with a table of 13 rows.
+        </p>
+        <figure class="center">
+          <img src="../../assets/join/join_vb2.png" width="500" alt="">
+        </figure>
+      </div>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <pre><code>SELECT O.naam AS OPOnaam, studiepunten, L.voornaam || &#39; &#39; || L.naam AS coordinator,
+  EXTRACT(YEAR FROM O.van) as startjaar
+FROM lector L, opleidingsonderdeel O
+WHERE coordinator = lector_id AND studiepunten &lt; 6
+ORDER BY 2 ASC, 4 DESC</code></pre>
+      </div>
+      
+</section>
+
+    <h2>Explicit JOIN</h2>
+    
+
+    The previous exercise exposes a <em>weakness of the implicit join</em> (multiple
+      tables in the FROM separated by a comma). Both the join condition
+      <code>(coordinator = lector_id)</code> and the 'normal' condition <code>(credits &lt; 6)</code> are in the <code>WHERE</code> component. An alternative notation exists
+      for the
+      <code>JOIN</code> where you explicitly name this operation that way.
+    
+    <p>
+      The solution of the previous exercise then looks like this with an explicit <code>JOIN</code>:<pre><code>SELECT O.naam AS OPOnaam, studiepunten, L.voornaam || &#39; &#39; || L.naam AS coordinator,
+  EXTRACT(YEAR FROM O.van) as startjaar
+FROM lector L INNER JOIN opleidingsonderdeel O ON coordinator = lector_id  -- leesbaarder!
+WHERE studiepunten &lt; 6
+ORDER BY 2 ASC, 4 DESC</code></pre>
+    </p>
+    <p>
+      The join condition is now in the <code>FROM</code> and we explicitly state
+      the word <code>JOIN</code>. This notation is more logical and you make less
+      chance of forgetting the join condition or doing something wrong in the <code>WHERE</code>, because this component is now simpler.
+    </p>
+    <p>
+      The order in which you write the tables is not important. The word <code>INNER</code>you may also omit it. <em>We recommend always writing it anyway</em>. In fact, there is also an <code>OUTER JOIN</code>.
+    </p>
+    <p>
+      There is also an alternative notation for the join condition that you can use
+      use <em>if both columns in that condition have identically the same name and if
+        you are testing for equality of both</em>. That is not the case in this example, but suppose that the column
+      'coordinator' also had 'lector_id' as its name, then we would have written the above
+      code written like this:<pre><code>SELECT O.naam AS OPOnaam, studiepunten, L.voornaam || &#39; &#39; || L.naam AS coordinator,
+  EXTRACT(YEAR FROM O.van) as startjaar
+FROM lector L INNER JOIN opleidingsonderdeel O ON O.lector_id = L.lector_id. -- alias nodig!
+WHERE studiepunten &lt; 6
+ORDER BY 2 ASC, 4 DESC</code></pre>
+    </p>
+    <p>
+      This can be shorter by using<code>USING</code>:<pre><code>SELECT O.naam AS OPOnaam, studiepunten, L.voornaam || &#39; &#39; || L.naam AS coordinator,
+  EXTRACT(YEAR FROM O.van) as startjaar
+FROM lector L INNER JOIN opleidingsonderdeel O USING(lector_id)
+WHERE studiepunten &lt; 6
+ORDER BY 2 ASC, 4 DESC</code></pre>
+    </p>
+    <p>
+      We will return to this later in the exercises. The notation with <code>ON</code> is always usable, the one with <code>USING</code> only in certain cases.
+    </p>
+
+    <h2>Jointing a table with itself</h2>
+    <p>
+      In a <code>JOIN</code> operation, you combine two (or more) tables. You
+      may also use <em>two times the same table</em>. The use of aliases
+      is mandatory in this case. Try the following exercise using the tips.
+    
+    </p>
+    <section class="taak">
+  <div>
+        <p>
+          For a competition, lectors form a team of two. One
+          person is the captain of the team; the other is then just a team member.
+          Write the query that generates a list of all possible teams
+          as shown in accompanying figure. This list contains 306 rows. Some
+          tips:
+        </p><ul>
+          <li>
+            The first team member is in the table 'lector', so is the second team member.
+            So you do an <code>INNER JOIN</code> of the table 'lector' with itself.</li>
+          <li>
+            You will have to distinguish between the first table 'lecturer' and
+            the second table 'lecturer'. Use as aliases e.g. 'L1' and 'L2'.
+          </li>
+          <li>
+            What will be the join condition? You cannot form a team with yourself ...          </li>
+          <li>Note the column headings in the figure.</li>
+        </ul>
+        <figure class="center">
+          <img src="../../assets/join/join_vb3.png" alt="" width="350">
+        </figure>
+      </div>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <pre><code>SELECT L1.voornaam || &#39; &#39; || L1.naam AS kapitein,
+  L2.voornaam || &#39; &#39; || L2.naam AS &quot;teamlid 2&quot;
+FROM lector L1 INNER JOIN lector L2 on L1.lector_id != L2.lector_id</code></pre>
+      </div>
+      
+</section>
+
+    <p>We extend the previous exercise a bit:</p>
+    <section class="taak">
+  <p>
+        We still want a list of possible teams of professors, but
+        with the additional condition that both team members must be in the same municipality
+        live. You will now only be able to create 6 possible teams. Also show the
+        municipality.
+      </p>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <pre><code>SELECT L1.voornaam || &#39; &#39; || L1.naam AS &quot;kapitein&quot;,
+  L2.voornaam || &#39; &#39; || L2.naam AS &quot;teamlid 2&quot;, L1.gemeente
+FROM lector L1 INNER JOIN lector L2 on
+  L1.lector_id != L2.lector_id AND L1.gemeente = L2.gemeente</code></pre>
+      </div>
+      
+</section>
+
+    <h2>Oefeningen</h2>
+    <section class="taak">
+  <div>
+        <p>
+          Which OPOs currently in TI's current program have a
+          coordinator who lives in a municipality whose zip code begins with
+          '3'. Write the SQL query that generates the figure below. You do
+          not sort.
+        </p>
+        <figure class="center">
+          <img src="../../assets/join/join_vb5.png" alt="">
+        </figure>
+      </div>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <pre><code>SELECT opocode, O.naam, lector_id, voornaam, L.naam, gemeente
+FROM opleidingsonderdeel O INNER JOIN lector L on O.coordinator = L.lector_id
+WHERE gemeente LIKE &#39;3%&#39; AND O.tot IS NULL</code></pre>
+      </div>
+      
+</section>
+
+    <section class="taak">
+  <div>
+        <p>
+          Write the SQL query that generates the list (see figure) of all the
+          lectors who are younger than Gerben Adriaens. This list is sorted
+          so that the youngest lecturer is at the top. One may assume that there is
+          only one Gerben Adriaens. <em>You may not first query the date of birth of Gerben
+            Adriaens</em>. Subqueries are not allowed either, because we haven't
+          seen. It can be done with one query by using a <code>JOIN</code>.
+          Also note the column header (as always).
+        </p><figure class="center">
+          <img src="../../assets/join/join_vb4.png" width="400" alt="">
+        </figure>
+      </div>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <p>
+          You can rejoin the table 'lector' with itself. Note the
+          special condition in the join condition. If you want to see better what
+          happens, you should ask for a <code>SELECT *</code> so that you can see the <em>full</em>row. The <code>WHERE</code> tests for who is younger. You
+          are younger if your date of birth is greater.<pre><code>SELECT L1.voornaam, L1.naam, EXTRACT(YEAR FROM L1.geboortedatum) AS geboortejaar
+FROM lector L1 INNER JOIN lector Adr ON Adr.naam = &#39;Adriaens&#39; AND Adr.voornaam = &#39;Gerben&#39;
+WHERE L1.geboortedatum &gt; Adr.geboortedatum
+ORDER BY 3 DESC</code></pre>
+        </p>
+      </div>
+      
+</section>
+
+    <section class="taak">
+  <div>
+        <p>
+          A student is still 8 SP short of graduation. Generate
+          a list (see figure below) of all possible combinations of
+          2 OPOs from the old program (OPOs that are now no longer given)
+          that together represent 8 credits. Chances are that you will
+          obtain a list where each combination appears twice (if A and B
+          together are 8 SP, then B and A are also 8 SP and then there are two rows with
+          the same two OPOs in a different order). Can you find a trick to
+          avoid these duplicates? No need to sort.
+        </p><figure class="center">
+          <img src="../../assets/join/join_vb6.png" alt="">
+        </figure>
+      </div>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <pre><code>SELECT O1.opocode, O1.naam || &#39; (&#39; || O1.studiepunten ||&#39;)&#39; AS OPO1,
+  O2.opocode, O2.naam || &#39; (&#39; || O2.studiepunten ||&#39;)&#39; AS OPO2
+FROM opleidingsonderdeel O1 INNER JOIN opleidingsonderdeel O2 on O1.opocode != O2.opocode
+WHERE O1.studiepunten + O2.studiepunten = 8 AND
+  O1.tot IS NOT NULL AND
+  O2.tot IS NOT NULL AND
+  O1.opocode &lt; O2.opocode -- een van mogelijke trucs om geen dubbels te hebben</code></pre>
+      </div>
+      
+</section>
+
+    <h2>Exercises SQLzoo</h2>
+    <h3>Schema ‘Euro2012’</h3>
+    <p>
+      An interesting exercise series on SQLzoo uses data i.e. the
+      <a href="https://en.wikipedia.org/wiki/UEFA_Euro_2012">the European soccer championship in 2012</a>. The logic model on SQLzoo's site that accompanies this exercise,
+      has a somewhat different notation. Therefore, we recreated it according to
+      our conventions:
+    </p>
+    <figure class="center">
+      <img src="../../assets/join/euro2012.svg" alt="">
+    </figure>
+    <p>A word about this model:</p>
+    <ul>
+      <li>
+        The schedule contains three tables: 'game' (contains information about each
+        game, such as time, stage and between which teams), 'eteam'
+        (name and coach of each team) and finally a table 'goal' (who scored
+        a goal in which minute for which team).
+      </li>
+      <li>
+        Note that<span style="color:#00c">the primary key of the table 'goal'</span> is a <em>composite key</em> (twice PK in the table): after all, there may be
+          multiple goals per match, after all, and so matchid alone would be
+          be insufficient to uniquely specify a goal. The combination of matchid
+          and gtime (minute in which the goal was scored) is unique (if you assume
+          that goals cannot be scored twice in the same minute &#128512;).</li>
+      <li>
+        The table 'game' has<span style="color:#090">two foreign keys, numbered FK1 and FK2</span>. After all, a game is played between two teams, and each field
+          ('team1' and 'team2') thus refers to a particular team about which you can find more
+          information can be found in the table 'eteam').
+      </li>
+      <li>
+        Moreover, you must be able to read the <em>cardinalities</em> well in this logical scheme
+        be able to read. The <span style="color:#090">large green ellipse</span> tells
+        you &ndash;if you look from 'eteam' to 'game'&ndash; that each team plays at least
+        is playing one game. The <span style="color:#f80">smaller orange ellipse</span>indicates that a game is played by one unique team1 and one
+        unique team2.
+      </li>
+      <li>
+        Regarding the cardinalities of the relationship between the tables 'goal' and
+        'eam': A team can score 0 or more goals in the tournament
+        (<span style="color:#c00">red circle</span>) and a specific goal
+        always belongs correctly to one team (<span style="color:#009">blue diamond</span>).
+      </li>
+    </ul>
+
+    <h3>Exercises on INNER JOIN</h3>
+    <p>
+      Note on this exercise set: on SQLzoo's site, they use
+      each time <code>JOIN</code> without the word <code>INNER</code>. We
+      prefer the full name, so preferably always write <code>INNER JOIN</code>.
+    </p>
+    <section class="taak">
+  <p>
+        <a href="https://sqlzoo.net/wiki/The_JOIN_operation">Complete exercise sequence 6 on<code>JOIN</code></a>.
+      </p>
+  
+        <button>Show / hide solution</button>
+        
+      
+</section>
+  </main>
+
+    <footer>
+      <div class="container">
+        <p>
+          <img src="../../assets/Logo_UCLL_negatief_RGB.png" width="100" height="53" alt="Logo UCLL Hogeschool"><br>&copy; 2023 — Steven Engels, Jan Van Hee
+        </p>
+        <p><a href="#top">&uarr; Go to top</a></p>
+      </div>
+    </footer>
+    <script src="../../assets/js/func2.js"></script>
+  </body>
+
+<!-- Mirrored from df.webontwerp.ucll.be/EN/SQL_innerjoin/ by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 18 Dec 2023 15:09:15 GMT -->
+</html>

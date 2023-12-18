@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="nl">
+  
+<!-- Mirrored from df.webontwerp.ucll.be/EN/SQL_outerjoin/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 18 Dec 2023 15:11:43 GMT -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../assets/styles/stijl.css">
+    <link rel="stylesheet" href="../../../cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/vs2015.min.css">
+    <script src="../../../cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+    <title>SQL: OUTER JOIN</title>
+  </head>
+
+  <body>
+    <header id="top">
+      <div class="container">
+        <nav>
+          <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../leerpad/index.html"></a></li>
+            <li><a href="../model_menu/index.html">Data modelling</a></li>
+            <li><a href="../SQL_menu/index.html">SQL</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    
+  <main>
+    <blockquote>
+      <p>
+        <span class="citaat">You can’t complain about the sea if you suffer shipwreck for the
+          second time.</span>
+        <br>
+        &mdash;IJslands gezegde
+      </p>
+    </blockquote>
+    <h1>Combining tables with OUTER JOIN</h1>
+    <p>
+      Again, we start with a movie, viz. the continuation of the movie from
+      the previous chapter.
+    </p>
+    <div class="iframewrapper">
+      <iframe class="preview-iframe" width="560" height="315" src="https://www.youtube.com/embed/pqPVIuzS0ZQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+
+    <h2>The need for an OUTER JOIN</h2>
+    <p>Make the following exercise as an introduction.</p>
+
+    <section class="taak">
+  <div>
+        <p>
+          Our program manager would like an overview of all lecturers
+          with their lecturer number, first name, surname and the name of the OPO of which they are
+          coordinator. Sort by last name alphabetically. You should obtain the
+          figure obtained below.
+        </p>
+        <figure class="center">
+          <img src="../../assets/join/outerjoin_1.png" width="600" alt="">
+        </figure>
+      </div>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <p>
+          Not so difficult: <pre><code>SELECT lector_id, L.voornaam, L.naam, OPO.naam
+FROM lector L INNER JOIN opleidingsonderdeel OPO ON L.lector_id = OPO.coordinator
+ORDER BY 3</code></pre>
+        </p>
+      </div>
+      
+</section>
+    <p>
+      We go over again the steps the RDBMS takes when executing
+      this query:
+    </p>
+    <ol>
+      <li>
+        First, the <code>FROM</code> is executed. This is a <code>INNER JOIN</code>of two tables and so the cartesian product is created first: each
+        row of the lector table is linked to each row of the OPO table.
+      </li>
+      <li>
+        Not all combinations in this cartesian product are <em>sense</em>:
+        only those where the lecturer number (in one table called 'lector_id',
+        in the other 'coordinator') match are retained, because those
+        satisfy the join condition ON L.lector_id = OPO.coordinator.
+      </li>
+      <li>
+        There is no <code>WHERE</code> component, so no more rows are dropped
+        from the result.
+      </li>
+      <li>The <code>GROUP BY</code> (and <code>HAVING</code>) is also missing.</li>
+      <li>
+        Finally, the result rows are arranged alphabetically by
+        surname via the <code>ORDER BY</code> component.
+      </li>
+    </ol>
+
+    <p>
+      You draw proudly with the requested list to the training manager,
+      who unfortunately is not entirely satisfied with the result. "I wanted
+      actually that <em>all</em> lecturers be in the list, including those who are not
+      any OPO coordinator" you can hear him say. The <code>INNER JOIN</code>
+      in your SQL query, however, shows <em>only</em> the lecturers that appear in both tables
+      occur, i.e., only the coordinators of OPOs.
+    </p>
+    <p>
+      If you still want to include <em>all</em> professors in the list, the missing
+      lecturers must be <em>added</em> to the result of the <code>INNER JOIN</code>. This is exactly what an
+      <code>OUTER JOIN</code> does. You just need to replace the word <code>INNER</code> with
+      replace with
+      <code>LEFT OUTER</code> or <code>RIGHT OUTER</code> (or possibly <code>FULL OUTER</code>):<pre><code>SELECT lector_id, L.voornaam, L.naam, OPO.naam
+FROM lector L LEFT OUTER JOIN opleidingsonderdeel OPO ON L.lector_id = OPO.coordinator
+ORDER BY 3</code></pre>
+    </p>
+    <p>
+      Why <code>LEFT</code>? This join contains two tables: one <em>left</em> of the word <code>JOIN</code> (i.e. 'lecturer') and one <em>right</em>
+      of the word JOIN (i.e. 'course unit'). After the ordinary <code>INNER JOIN</code> some lecturers are still missing from the lecture table. Because that table is to the left of
+      the word
+      <code>JOIN</code>, this thus becomes a <code>LEFT OUTER JOIN</code>.
+    </p>
+    <p>
+      This code is completely equivalent to this variant:<pre><code>SELECT lector_id, L.voornaam, L.naam, OPO.naam
+FROM opleidingsonderdeel OPO RIGHT OUTER JOIN lector L ON L.lector_id = OPO.coordinator
+ORDER BY 3</code></pre>
+    </p>
+    <p>
+      After all, we simply swapped the order in which the two tables are written
+      are written. This does not affect the <code>INNER JOIN</code>which happens first, but you must therefore replace the word <code>LEFT</code>
+      with <code>RIGHT</code>. The following figure shows the result. In
+      comparison with the earlier figure, a <em>number of rows added</em>. For example, there is lector Elke Crabbé who is not coordinator of any OPO.
+      Since she does not appear in the table 'course unit', there is also
+      no information about the name of the OPO. <em>This is why there is null (no value) in the last column</em> (<span style="color:orange">oranje line</span>).
+    </p>
+    <figure class="center">
+      <img src="../../assets/join/outerjoin_2.png" width="600" alt="">
+    </figure>
+
+    <section class="taak">
+  <div>
+        <p>
+          Explain why the following two queries return the exact same result: <pre><code>-- query 1
+SELECT lector_id, L.voornaam, L.naam, OPO.naam
+FROM opleidingsonderdeel OPO LEFT OUTER JOIN lector L ON L.lector_id = OPO.coordinator
+ORDER BY 3
+
+-- query 2
+SELECT lector_id, L.voornaam, L.naam, OPO.naam
+FROM opleidingsonderdeel OPO INNER JOIN lector L ON L.lector_id = OPO.coordinator
+ORDER BY 3</code></pre>
+        </p>
+      </div>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <p>
+          From query 2 with the <code>INNER JOIN</code> you already know the result. Query
+          1 is a <code>LEFT OUTER JOIN</code>. <strong>.
+            Each <code>OUTER JOIN</code> starts first as a regular <code>INNER JOIN</code>
+          </strong>. Once that is done, it looks at which rows from the
+          left table are missing. Those are then added. Here, however, the
+          left table, however, is the "course section" table. <em>Every</em> row of
+          this table is already represented in the <code>INNER JOIN</code> (why?),
+          so no more rows are added. Both queries therefore return
+          the same result.
+        </p>
+      </div>
+      
+</section>
+
+    <h2>JOIN and GROUP BY</h2>
+    <p>
+      <code>JOIN</code> can be combined with other components without any problem,
+      so also with <code>GROUP BY</code> and <code>HAVING</code>.
+    </p>
+
+    <section class="taak">
+  <p>
+        We will work out the following example. Will you try all the steps yourself? There
+        will go wrong several times. Always find the mistake first.
+      </p>
+  
+        <button>Show / hide solution</button>
+        
+      
+</section>
+    <p>
+      List all teachers with the number of OPOs for which they are
+      coordinator. Even lecturers who are not coordinators of any OPO,
+      should be included in the list. Sort the list alphabetically by name.
+    </p>
+    <p>Analyze the task:</p>
+    <ul>
+      <li>
+        You need to combine information from the lector table and the OPO table, so we
+        need an <code>(INNER) JOIN</code>.
+      </li>
+      <li>
+        The sentence "also lecturers who are not coordinators of any OPO ..." points
+        to an <code>OUTER JOIN</code>.
+      </li>
+      <li>
+        <em>Per lector</em> summary information should be given, so
+        we need a
+        <code>GROUP BY</code>.
+      </li>
+      <li>Counting numbers is done with <code>COUNT()</code>.</li>
+    </ul>
+
+    <p>
+      To predict what we should obtain, we start from the
+      known code that generated the figure in the section above:<pre><code>SELECT lector_id, L.voornaam, L.naam, OPO.naam
+FROM opleidingsonderdeel OPO RIGHT OUTER JOIN lector L ON L.lector_id = OPO.coordinator
+ORDER BY 3</code></pre>
+    </p>
+    <p>
+      See the list in that figure. Lecturer 'Gerben Adriaens' is from one OPO
+      coordinator, 'Goedele Bogers' of two, 'Elke Crabbé' none etc.
+    </p>
+    <p>
+      Customize this code with a <code>GROUP BY</code>:<pre><code>SELECT lector_id, L.voornaam, L.naam, OPO.naam
+FROM opleidingsonderdeel OPO RIGHT OUTER JOIN lector L ON L.lector_id = OPO.coordinator
+GROUP BY lector_id
+ORDER BY 3</code></pre>
+    </p>
+    <p>
+      You get an error message (think for a moment why):<pre><code>ERROR: column &quot;opo.naam&quot; must appear in the GROUP BY clause or be used
+in an aggregate function
+LINE 2: SELECT lector_id, L.voornaam, L.naam, OPO.naam</code></pre>
+    </p>
+    <p>
+      Why is there an error message about 'OPO.name'? If you use the<a href="../SQL_groupby_having/index.html">chapter on GROUP BY</a> processed, you should be able to provide the answer to that question. <em>By grouping the information into boxes per lecturer, the
+      detailed information about the OPOs is lost</em>. The only thing you can still retrieve is information from the so-called
+    'aggregation functions' <code>MIN()</code>, <code>MAX()</code>, <code>AVG()</code>, <code>COUNT()</code> and <code>SUM()</code>.
+    </p>
+    <section class="opgepast">
+      <p>
+        Something strange is going on, however. Why is there no error message
+        about L.first name and L.name? We had explained that in the <code>SELECT</code> can only list the columns that are in the <code>GROUP BY</code> (and
+        aggregation functions as well)? Then why do you get <em>no</em> error message for
+        L.first name and L.name?
+      </p>
+      <p>
+        The reason is that here you <em>group</em> on the primary key of the
+        lector table. So you are sure that one box will be created per lector.
+        In that box there is only one lecturer name, lecturer first name, etc., but multiple
+        OPOs. Therefore, you can retrieve the columns L.name and L.first name, but
+        not OPO.name.
+      </p>
+    </section>
+    <p>
+      So you have to use an aggregation function in the code. In this case
+      That's counting a number of times something occurs, so a <code>COUNT()</code>. Modify the code to:<pre><code>SELECT lector_id, L.voornaam, L.naam, COUNT(*)
+FROM opleidingsonderdeel OPO RIGHT OUTER JOIN lector L ON L.lector_id = OPO.coordinator
+GROUP BY lector_id
+ORDER BY 3</code></pre>
+    </p>
+    <p>You obtain this <em>(error!)</em>result:</p>
+    <figure class="center">
+      <img src="../../assets/join/outerjoin_3.png" width="600" alt="">
+    </figure>
+    <p>
+      There is a problem with this figure (and thus with our code). Compare for a moment
+      with the previous figure. Gerben does have 1 OPO, Goedele is
+      coordinator of two OPOs, but Elke Crabbé is not the coordinator of any OPO.
+      coordinator. However, the result of our code is that Elke Crabbé is coordinator of one
+      OPO coordinator (see<span style="color: orange">orange arrow</span>
+      in the figure). What goes wrong?
+    </p>
+    <section class="opgepast">
+      <p>
+        The error is in the aggregation function <code>COUNT(*)</code>. This
+        function (with <code>*</code>) <em>counts all rows, including those with one or more <code>NULL</code> values</em>. So the row containing Elke Crabbé's info is effectively counted. This
+        problem is fortunately easy to solve. Instead of the <code>*</code> enter <em>the column of interest for what you want to count</em>. Specifically, here we are talking about 'OPO.name'. A value <code>NULL</code> in this field will not count. So you end the <code>SELECT</code> with <code>COUNT(OPO.name)</code>:<pre><code>SELECT lector_id, L.voornaam, L.naam, COUNT(OPO.naam)
+FROM opleidingsonderdeel OPO RIGHT OUTER JOIN lector L ON L.lector_id = OPO.coordinator
+GROUP BY lector_id
+ORDER BY 3</code></pre>
+      </p>
+    </section>
+
+    <h2>Select rows that do NOT meet a certain condition</h2>.
+    
+    <p>
+      Note: This is a <strong>quite difficult piece</strong>.
+      Exercises that rely on this principle are quite tough!
+    </p>
+    <p>
+      You get a new question from the training manager: "I would like
+      like a list of all professors who are NOT coordinators of one or
+      multiple OPOs."
+    </p>
+    <p>
+      Piece of cake, of course! With the <code>OUTER JOIN</code> of previous
+      section you got a list of all coordinators, supplemented by the lecturers
+      who do not appear in the OPO table and thus are not coordinators. Those "added
+      lecturers you recognize by the absence of a value for the column with the OPO name.
+      Filtering rows after running the <code>FROM</code> is done with the <code>WHERE</code> component. The query thus becomes:<pre><code>SELECT lector_id, L.voornaam, L.naam, OPO.naam
+FROM lector L LEFT OUTER JOIN opleidingsonderdeel OPO ON L.lector_id = OPO.coordinator
+WHERE naam = NULL -- principe is OK, code niet! Zie opdracht hieronder
+ORDER BY 3</code></pre>
+    </p>
+    <section class="taak">
+  <p>
+        We intentionally put two errors in the <code>WHERE</code> component of the above
+        query. Correct those so that the query is executed correctly and you
+        obtain a list of four lectors: Elke, Maarten, Patrick and Lut.</p>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <p>
+          Error 1: "name" is ambiguous. Is it referring to the name of the lecturer or
+          the name of the OPO? Second error: comparing with <code>NULL</code> should
+          never with '=' but must be with the word 'IS'. The correct <code>WHERE</code> component is: <code>WHERE OPO.name IS NULL</code>.
+        </p>
+      </div>
+      
+</section>
+
+    <h3>Exercise</h3>
+    <section class="taak">
+  <div>
+        <p>
+          List all professors who are not coordinators of an OPO
+          that has 6 SP. Order alphabetically by name and then by first name. Your
+          should obtain the result from this figure:
+        </p>
+        <figure class="center">
+          <img src="../../assets/join/outerjoin_4.png" alt="" width="400">
+        </figure>
+      </div>
+  
+        <button>Show / hide solution</button>
+        <div class="oplossing">
+        <p>
+          Tip: start this exercise with more columns than just first name and last name
+          (possibly even with all columns!). First, create an <code>INNER JOIN</code>. Look at the result. Now transform your query into a <code>OUTER JOIN</code> and see what was added.
+        </p>
+        <pre><code>SELECT l.naam, l.voornaam
+FROM opleidingsonderdeel o RIGHT OUTER JOIN lector l ON
+  o.coordinator = l.lector_id AND o.studiepunten = 6
+WHERE o.studiepunten IS NULL
+ORDER BY 1, 2</code></pre>
+      </div>
+      
+</section>
+
+    <h2>FULL OUTER JOIN</h2>
+    <p>
+      It was explained above that an <code>OUTER JOIN</code> is a <code>INNER JOIN</code> is where all missing elements from one table (those attached to the <code>LEFT</code> or the <code>RIGHT</code> side) are added. There is also a <code>FULL OUTER JOIN</code> which essentially <em> means
+        means adding the missing elements from both the left
+        and the right table
+      </em>. In our example with only two tables (lecturers and OPOs)
+      however, we cannot create a meaningful <code>FULL OUTER JOIN</code>. This will be
+      covered later in the exercises. In the video at the beginning of this chapter
+      does explain it well.
+    </p>
+
+    <h2>Summary overview JOIN</h2>
+    <p>
+      Below is another overview of all the different types of <code>JOIN</code>
+      that we have seen. For each type we list how the set of rows that
+      the rest of the query is run with is constructed.
+    </p>
+
+    <ul>
+      <li>
+        Implicit JOIN <code>A,B</code>: Each row of table A is
+        combined with each row of table B.
+      </li>
+      <li>
+        <code>A INNER JOIN B</code>: Each row of table A is combined with
+        each row of table B where the combination satisfies the
+        join condition.
+      </li>
+      <li>
+        <code>A LEFT OUTER JOIN B</code>: Each row of table A is
+        combined with each row of table B where the combination satisfies
+        the join condition. Here, all rows of table A that do not
+        satisfy the join condition supplemented by null values for all
+        columns of table B.
+      </li>
+      <li>
+        <code>A RIGHT OUTER JOIN B</code>: Each row of table A is
+        combined with each row of table B where the combination satisfies
+        the join condition. Here, all rows of table B that do not
+        satisfy the join condition supplemented by null values for all
+        columns of table A.
+      </li>
+      <li>
+        <code>A FULL OUTER JOIN B</code>: Each row of table A is
+        combined with each row of table B where the combination satisfies
+        the join condition. Here, all rows of table A that do not
+        satisfy the join condition are completed with null values for all columns of table B.
+        columns of table B. Here, all rows of table B that do not
+        satisfy the join condition supplemented by null values for all
+        columns of table A.
+      </li>
+    </ul>
+  </main>
+
+    <footer>
+      <div class="container">
+        <p>
+          <img src="../../assets/Logo_UCLL_negatief_RGB.png" width="100" height="53" alt="Logo UCLL Hogeschool"><br>&copy; 2023 — Steven Engels, Jan Van Hee
+        </p>
+        <p><a href="#top">&uarr; Go to top</a></p>
+      </div>
+    </footer>
+    <script src="../../assets/js/func2.js"></script>
+  </body>
+
+<!-- Mirrored from df.webontwerp.ucll.be/EN/SQL_outerjoin/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 18 Dec 2023 15:11:43 GMT -->
+</html>

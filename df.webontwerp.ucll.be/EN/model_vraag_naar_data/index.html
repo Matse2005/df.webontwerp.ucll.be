@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="nl">
+  
+<!-- Mirrored from df.webontwerp.ucll.be/EN/model_vraag_naar_data/ by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 18 Dec 2023 15:09:07 GMT -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../assets/styles/stijl.css">
+    <link rel="stylesheet" href="../../../cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/vs2015.min.css">
+    <script src="../../../cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+    <title>Modelleren: van vraag naar data</title>
+  </head>
+
+  <body>
+    <header id="top">
+      <div class="container">
+        <nav>
+          <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../leerpad/index.html"></a></li>
+            <li><a href="../model_menu/index.html">Data modelling</a></li>
+            <li><a href="../SQL_menu/index.html">SQL</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    
+  <main>
+    <blockquote>
+      <p>
+        <span class="citaat">The great thing about a database is that you can ask it a question
+          that you hadn't thought of before and get an answer.</span>
+        <br>
+        &mdash; Michael Stonebraker
+      </p>
+    </blockquote>
+    <h1>From demand to data</h1>
+    
+    <p>
+      In this chapter, we want to take a brief look at how datasets and databases
+      are created. You should remember the following from this chapter:
+    </p>
+
+    <section class="leerdoel">
+      <ul>
+        <li>data modeling as a step in the analysis of IT applications;</li>
+        <li>a step-by-step approach to database development;</li>
+        <li>conceptual, logical and physical data model;</li>
+      </ul>
+    </section>
+
+    <h2>Start with a question</h2>
+    
+    <p>
+      In <a href="../SQL_intro/index.html">the introductory chapter SQL</a> we have already
+      briefly explained how, using SQL, we can query an existing dataset
+      query. In the following chapters we will go into more detail about the
+      possibilities that SQL has to offer. In parallel, we want to
+      explain, namely <em>building datasets and databases</em>. We
+      address the following questions:
+      </p><ul>
+        <li>how do datasets and databases come about?</li>
+        <li>what process leads to a well-built database?</li>
+        <li>what determines whether a database is well built?</li>
+      </ul>
+    
+
+    <p>
+      Before looking at how datasets and databases are created, we consider
+      we look at a similar process, namely building a house. Suppose you
+      would like to have a house built, how do you proceed? In the first
+      initially, you start with <em>a question or need</em> to build something. You want to
+      build a house for your family, for example. As soon as you know you are going to have a
+      house, you contact an <em>architect</em>. The
+      architect will start thinking with you of exactly what needs to be built
+      be built, by asking a lot of questions to fully understand what your house
+      should look like.
+    </p>
+    <p>
+      Meanwhile, the architect, using his technical
+      expertise, is going to ensure that while designing the house, a number of <em>basic principles and good practices</em>
+      are respected. After your consultation, the architect draws a floor plan.
+    </p>
+    <figure class="center">
+      <img src="../../assets/vraag_naar_data/grondplan.jpg" alt="">
+    </figure>
+    <p>
+      This floor plan is <em>discussed</em> with you to ensure that the
+      architect's interpretation matches your expectations. In later stages
+      phases, the architect will make more detailed versions of this plan so that
+      contractors, electricians, plumbers, ... know how your house should be made.
+      This detailed floor plan is kept well in order to have an overview of where
+      certain construction elements (water pipes, electricity, support beams,
+      ...) are located.
+    </p>
+
+    <h2>Request for data</h2>
+    
+    <p>
+      For building a database, the process is similar. <em>
+        A database typically starts with a request to keep track of data</em>, for example, data collected within software. An architect
+      (we have those in IT, too) or an analyst will work with users and
+      developers to consider what data should go into a database.
+      Based on those conversations, the analyst will draw up a <em>data model</em> drawn out that is discussed with the relevant parties.
+    </p><p>
+      This model is then further detailed in a number of steps into
+      a <em>building plan</em> for a database. This building plan allows the developers
+      of the database to build the database. It also allows the developers of
+      the software to start developing the application.
+      Because once the structure of the database is agreed upon, you can
+      as a developer write your code that will work with this structure,
+      without the database being built. Later when the database is built, you can
+      the code <em>tested</em>. Finally, the models are an important
+      source for
+      <em>documentation</em> for analysts and developers for the <em>further</em>
+        further development and maintenance of the systems.
+    </p>
+
+    <h2>Analysis</h2>
+
+    <p>
+      The development of an IT solution (ideally) follows a
+      roadmap. There are a lot of different standardized
+      variants of such a roadmap, what we will call later in the course
+      development methodologies later in the course. A development methodology
+      can be linear or iterative, and consists of a number of stages.
+    </p>
+    <p>
+      An important phase that recurs in just about every development methodology for IT
+      applications is the analysis phase or <em>analysis</em> for short.
+      Within the analysis phase, we are going to translate the demand for an IT application
+      to a number of functional and technical requirements. The result of
+      this phase we call the <em>(requirement-)analysis.</em>
+    </p>
+    <p>
+      Analysis is an essential phase in which we identify the problem, the process to be
+      automate process, the underlying logic, ... try to properly
+      understand before we start the implementation. In this phase, we will
+      go through documentation, conduct interviews, organize workshops, ... to
+      gather information ourselves. Then we are going to structure that information in a
+      certain way to structure that information. There are many different methods
+      used within an analysis, some of which you will
+      will discover within this OPO and in further training.
+    </p>
+
+    <p>
+      The sub-process of the analysis in which we identify the <em>the</em>
+        requirements for information and consequently data mapping, we call
+      <em>data modeling.</em> As a component for software demand, we are going to
+      evaluate what demand exists to track data persistently.
+    </p>
+
+    <p>
+      In later courses, the concept of
+      development methodology. You will explore different variants (including agile,
+      DevOps, waterfall, rapid application development) more in depth
+      study.
+    </p>
+
+    <h2>Data modeling</h2>
+    <p>
+      Data modeling proceeds in a number of steps. In each step, we try to
+      answer a particular question (the specific questions are discussed below
+      discussed below). The result of each step results in a data model, in which
+      we may or may not build on a data model from a previous step. <em>
+        Each step results in a data model and associated documentation</em>.
+    </p>
+    <p>
+      A data model is <em>
+        a visual and schematic representation of the data we want to include in a
+        database.
+      </em> It contains the various pieces of data that make up the database
+      and the relationships that exist between these pieces. To draw out the data model
+      draw, we use a <em>standardized notation.</em>
+    </p>
+    <p>
+      There are certain advantages to using a standardized
+      notation. First, it promotes the <em>readability</em> of the
+      data model. If there are clear agreements about which symbols are used
+      and how to interpret them, anyone familiar with the notation can read the data model
+      read and interpret the data model. Data models can thus be easily exchanged.
+    </p>
+    <p>
+      A second advantage is that the notation was developed to <em>present complex concepts in a simple way.</em> It simplifies and speeds up the design of a data model. Add to this
+      add to this the fact that there are a lot of tools that allow you to digitally
+      create them, and you can proceed quickly and efficiently.
+    </p>
+    <p>
+      Since data modeling of a database is done in steps, and each
+      step results in a data model, we will have multiple
+      data models. We are talking about layers here where each data model forms a
+      particular layer and, as mentioned earlier, answers a particular question.
+    </p>
+    <p>
+      In our process we distinguish three types (layers) of data models:
+      conceptual, logical and physical.
+    </p>
+
+    <figure class="center">
+      <img src="../../assets/vraag_naar_data/datamodel-lagen.png" alt="Lagen datamodel">
+    </figure>
+
+    <h3>Conceptual data model</h3>.
+    
+    <p>
+      The first step is to draw out a conceptual data model in which we
+      define an answer to the question <em>
+        "What information is relevant to the intended IT application?"</em>. In this data model, we create a picture on the reality of the users <em>
+        without including technical details or technical limitations
+        into account</em>. Instead, the focus is on the relevant concepts and business logic
+      ('business logic').
+    </p><p>
+      The conceptual data model also allows the scope ('scope') of the
+      data model to be well delineated, so that all involved have a clear view
+      of what is of interest. It provides a view on what is included in the
+      application, and what is not included.
+    </p>
+
+    <p>
+      In drawing out the conceptual model, we try to answer the following
+      questions:
+    </p>
+    <ul>
+      <li><em>what concepts</em> are important to our application?</li>
+      <li><em>how</em> are we going to <em>describe</em> those concepts?</li>
+      <li>what <em>connections</em> are there between these concepts?</li>
+    </ul>
+
+    <p>
+      The conceptual data model typically emerges as a <em>collaboration</em> between analysts and users.
+        collaboration between analysts and users. During workshops, interviews, etc., the users describe what
+      information is relevant.
+    </p>
+    <p>
+      The analyst collects this information and compiles it into a conceptual
+      data model. This data model serves as <em>
+        a means of communication between the various parties involved</em>. The simple nature of the conceptual data model allows
+      users easily evaluate whether the analysts' interpretation is
+      correct. On the other hand, it contains enough information for the analysts to
+      work on this further.
+    </p>
+    <p>
+      Very important: at this level, there is still <em>no</em> talk about technology,
+      just high-level what information is relevant to the users. This is what makes
+      the conceptual data model also so valuable: after this step, the development team
+      of the application can still go in any direction.
+    </p>
+    <p>
+      The conceptual data model below tells the following story: "A student
+      (with some data such as r-number etc.) takes at least one OPO,
+      while this OPO (code, number of credits SP etc.) can be taken by multiple
+      students. It is also possible that there is an OPO
+      that is not chosen by any student.". This drawing can also be
+      read by non-technical people and can thus serve as a basis for
+      a conversation.
+    </p>
+    <figure class="center">
+      <img src="../../assets/vraag_naar_data/studentOPOconceptueel.svg" alt="">
+    </figure>
+
+    <p>
+      <a href="../model_conceptueel/index.html">
+        We will go into more detail later about the conceptual data model and how it is created
+        established.
+      </a>
+    </p>
+
+    <h3>Logical data model</h3>.
+    
+    <p>
+      Once we have a view of the information and consequently the concrete data
+      facts or data relevant to the users, we try to answer the
+      following question:<em>
+        "Which database model is best suited for the development of our
+        database?"</em>. In fact, there are several data<em>bank</em> models (not to be
+      confused with data models) where each of the database models defines a way
+      defines a way to structure data. Each database model has its advantages and
+      disadvantages or specific applications, and proper consideration is
+      necessary.
+    </p>
+    <p>
+      The choice of a particular database model is typically made in
+      consultation between the analysts (with visibility into the data being modeled
+      being modeled), the architect (with visibility into the broad technical environment in which the
+      application will be developed) and the developers (with visibility into the
+      technology that will be used for the application). The impact of the
+      choice is not only relevant to the database, but <em>it
+        also imposes constraints on the DBMS and technology that will be used
+        are</em>.
+    </p><p>
+      After choosing a particular database model <em>the analyst <em>translates</em> taking into account the specific rules of the database model. Some
+      database models, for example, are going to place a constraint on the type of relationships
+      that can exist between the data. In this case, during the conversion we are going to
+      convert the unsupported types of relationships to relationship types that are
+      supported. No doubt this all sounds a bit abstract, but we
+      will come back to this in detail later.
+    </em></p><em>
+    </em><p><em>
+      In quite a few cases, a <em>customized</em> relational database model will be chosen.
+        relational database model</em>. Therefore, in the case of this choice, the logical data model is called a
+      <em>relational data model</em>. We focus within this box on
+      the relational database model and will come back to this in detail in a later chapter
+      on this.
+    </p>
+    <p>
+      In the following figure you will find the translation of the conceptual model into
+      a logical model. A relational model was chosen. It is already a
+      lot more technical (three tables, primary and foreign key, ... see
+      later), but still leaves out certain details because it is not yet
+      specifically chosen which DBMS to use.
+    </p>
+    <figure class="center">
+      <img src="../../assets/vraag_naar_data/studentOPOlogisch.svg" alt="">
+    </figure>
+    <p>
+      Standards are also defined for relational data models; we call
+      these <em>normalities</em>. There are different levels of
+      normal forms. Each normal form consists of a number of technical
+      criteria. Each level imposes additional criteria. A data model that meets the
+      criteria of a normal form satisfies the normal form. The
+      criteria are defined to prevent possible errors in the use of the
+      database. Thus, by indicating that a data model follows a certain
+      normal form, you thus provide a guarantee that certain rules within the
+      data model are respected. We will come back to this later.
+    </p>
+    <p>
+      The logical data model is just because of its conversion to a specific
+      database model <em>already a bit more technical</em> than the conceptual data model.
+      This also makes the readability of the data model a bit more difficult for non-IT
+      contributors. Nevertheless, the data model still <em>contains</em>
+        too little technical information for the developers
+       of the database, so that an additional step is needed, namely the conversion
+      for a specific DBMS. So on to the physical data model ...
+    </p>
+    <p>
+      <a href="../model_logisch/index.html">A full chapter is also devoted to the logic model.</a>
+    </p>
+
+    <h3>Physical data model</h3>
+    <p>
+      The final step focuses on the question <em>.
+        "Which DBMS are we going to use to store the data?"</em>. In the development of the physical data model, decisions are made
+      how the data will be physically structured within the database, taking into account
+      consideration of the chosen DBMS. Each DBMS has its own set of capabilities
+      and challenges that a development team can take advantage of or must
+      into account. In addition, there are also many considerations
+      performance, security, ... All of these technical
+      decisions come together in the physical data model.
+    </p>
+    <p>
+      <em>
+        In this phase, architects, database administrators and developers will
+        evaluate which DBMS will be used</em>. In a lot of cases, this choice is already fixed since most
+      organizations have already made a choice in their architecture. The
+      combining different DBMS in the same architecture means
+      additional complexity and cost, so that is avoided in most cases
+      avoided whenever possible.
+    </p>
+    <p>
+      Once a DBMS is chosen, database administrators
+      and developers evaluate the <em>structure</em> of the database and establish <em>technical
+        technical details</em> determine how specifically the data will be stored. This analysis results
+      in the physical data model that contains all this information. The physical data model
+      allows the developers to implement the necessary structures and build the
+      database.
+    </p>
+    <p>
+      The last figure translates the previous (logical) relational data model
+      into a physical data model specific to PostgreSQL. The drawing now includes
+      also concrete details, such as data types (<code>char(8)</code>, <code>smallint</code>, ...). By the way, it was created with another tool, which can communicate with a specific
+      server to communicate with (DBSchema, see later).
+    </p>
+    <figure class="center">
+      <img src="../../assets/vraag_naar_data/studentOPOfysiek.png" alt="">
+    </figure>
+    <p>
+      <a href="../model_fysiek/index.html">
+        We will return to the physical
+        data model.
+      </a>
+    </p>
+  </main>
+
+    <footer>
+      <div class="container">
+        <p>
+          <img src="../../assets/Logo_UCLL_negatief_RGB.png" width="100" height="53" alt="Logo UCLL Hogeschool"><br>&copy; 2023 — Steven Engels, Jan Van Hee
+        </p>
+        <p><a href="#top">&uarr; Go to top</a></p>
+      </div>
+    </footer>
+    <script src="../../assets/js/func2.js"></script>
+  </body>
+
+<!-- Mirrored from df.webontwerp.ucll.be/EN/model_vraag_naar_data/ by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 18 Dec 2023 15:09:07 GMT -->
+</html>
